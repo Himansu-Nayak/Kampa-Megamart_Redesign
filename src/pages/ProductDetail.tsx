@@ -1,0 +1,295 @@
+import { useState } from 'react'
+import { useApp } from '@/context/AppContext'
+import { products, formatPrice, getDiscount } from '@/data'
+import ProductCard from '@/components/ProductCard'
+import { StarRating } from '@/components/ProductCard'
+
+const mockReviews = [
+  { name: 'Vikas Kumar', rating: 5, date: '12 Jul 2025', title: 'Excellent value for money', text: 'Exceeded my expectations. Build quality is solid and performance is snappy. Delivery was a day early!' },
+  { name: 'Sneha Patel', rating: 4, date: '28 Jun 2025', title: 'Very good, minor issues', text: 'Overall great product. Setup was simple and it works as advertised. Packaging could be slightly better but the product itself is 5-star.' },
+  { name: 'Arun Krishnan', rating: 5, date: '15 Jun 2025', title: 'Bought 2nd time from Kampa', text: 'Repeat purchase — same great quality as before. Kampa consistently delivers genuine products at good prices. Highly recommend.' },
+]
+
+export default function ProductDetail() {
+  const { productId, navigate, addToCart } = useApp()
+  const product = products.find(p => p.id === productId) ?? products[0]
+  const [qty, setQty] = useState(1)
+  const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'reviews'>('description')
+  const [added, setAdded] = useState(false)
+
+  const discount = getDiscount(product.price, product.mrp)
+  const related = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4)
+
+  function handleAddToCart() {
+    addToCart(product, qty)
+    setAdded(true)
+    setTimeout(() => setAdded(false), 2000)
+  }
+
+  function handleBuyNow() {
+    addToCart(product, qty)
+    navigate('cart')
+  }
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-6">
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-2 text-xs text-slate-500 mb-6 flex-wrap">
+        <button onClick={() => navigate('home')} className="hover:text-teal-700">Home</button>
+        <span>›</span>
+        <button onClick={() => navigate('category', { categoryId: product.category })} className="hover:text-teal-700 capitalize">
+          {product.category.replace(/-/g, ' ')}
+        </button>
+        <span>›</span>
+        <span className="text-slate-800 font-medium line-clamp-1">{product.name}</span>
+      </nav>
+
+      {/* Main product section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 bg-white rounded-2xl border border-slate-100 p-6">
+        {/* Image */}
+        <div className="space-y-3">
+          <div className="aspect-square bg-slate-50 rounded-xl overflow-hidden">
+            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+          </div>
+          {/* Thumbnail strip */}
+          <div className="flex gap-2">
+            {[product.image, product.image, product.image].map((img, i) => (
+              <button key={i} className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${i === 0 ? 'border-teal-700' : 'border-transparent hover:border-slate-300'}`}>
+                <img src={img} alt="" className="w-full h-full object-cover" />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Info */}
+        <div>
+          {/* Brand + badges */}
+          <div className="flex items-center gap-2 mb-2 flex-wrap">
+            <span className="text-xs font-bold text-teal-700 uppercase tracking-wide bg-teal-50 px-2 py-0.5 rounded">{product.brand}</span>
+            {product.badge && (
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
+                product.badge === 'sale' ? 'bg-red-100 text-red-600' :
+                product.badge === 'new' ? 'bg-blue-100 text-blue-600' :
+                product.badge === 'bestseller' ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-600'
+              }`}>
+                {product.badge === 'bestseller' ? '⭐ Best Seller' : product.badge.toUpperCase()}
+              </span>
+            )}
+            {product.inStock ? (
+              <span className="text-[10px] font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">✓ In Stock</span>
+            ) : (
+              <span className="text-[10px] font-semibold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">Out of Stock</span>
+            )}
+          </div>
+
+          <h1 className="text-xl md:text-2xl font-bold text-slate-900 mb-3 leading-snug" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            {product.name}
+          </h1>
+
+          {/* Rating */}
+          <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-1 bg-teal-700 text-white text-xs font-bold px-2 py-0.5 rounded">
+              {product.rating} ★
+            </div>
+            <StarRating rating={product.rating} />
+            <span className="text-sm text-slate-500">{product.reviews.toLocaleString()} ratings</span>
+          </div>
+
+          {/* Price */}
+          <div className="bg-slate-50 rounded-xl p-4 mb-5">
+            <div className="flex items-baseline gap-3 flex-wrap">
+              <span className="text-3xl font-extrabold text-slate-900" style={{ fontFamily: 'Poppins, sans-serif' }}>{formatPrice(product.price)}</span>
+              <span className="text-lg text-slate-400 line-through">{formatPrice(product.mrp)}</span>
+              {discount > 0 && (
+                <span className="text-base font-bold text-green-600">{discount}% off</span>
+              )}
+            </div>
+            {discount > 0 && (
+              <p className="text-sm text-green-700 mt-1 font-medium">You save {formatPrice(product.mrp - product.price)}</p>
+            )}
+            <p className="text-xs text-slate-500 mt-2">Inclusive of all taxes · Free delivery on this order</p>
+          </div>
+
+          {/* Quantity */}
+          <div className="flex items-center gap-4 mb-5">
+            <span className="text-sm font-medium text-slate-700">Quantity:</span>
+            <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden">
+              <button onClick={() => setQty(q => Math.max(1, q - 1))} className="px-3 py-2 hover:bg-slate-100 transition-colors text-slate-700">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                </svg>
+              </button>
+              <span className="px-4 py-2 text-sm font-semibold text-slate-900 min-w-[2.5rem] text-center border-x border-slate-200">{qty}</span>
+              <button onClick={() => setQty(q => q + 1)} className="px-3 py-2 hover:bg-slate-100 transition-colors text-slate-700">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* CTAs */}
+          <div className="flex gap-3 mb-5">
+            <button
+              onClick={handleAddToCart}
+              disabled={!product.inStock}
+              className={`flex-1 py-3 rounded-xl font-semibold text-sm border-2 transition-all ${
+                added ? 'border-green-500 bg-green-500 text-white' :
+                'border-teal-700 text-teal-700 hover:bg-teal-700 hover:text-white'
+              } disabled:border-slate-300 disabled:text-slate-400`}
+              style={{ fontFamily: 'Poppins, sans-serif' }}
+            >
+              {added ? '✓ Added to Cart!' : '🛒 Add to Cart'}
+            </button>
+            <button
+              onClick={handleBuyNow}
+              disabled={!product.inStock}
+              className="flex-1 py-3 bg-amber-400 hover:bg-amber-500 disabled:bg-slate-200 disabled:text-slate-400 text-amber-900 rounded-xl font-semibold text-sm transition-colors"
+              style={{ fontFamily: 'Poppins, sans-serif' }}
+            >
+              ⚡ Buy Now
+            </button>
+          </div>
+
+          {/* Delivery info */}
+          <div className="space-y-2.5 text-sm">
+            <div className="flex items-start gap-2">
+              <span className="text-teal-600 mt-0.5">🚚</span>
+              <div>
+                <span className="font-medium text-slate-800">Free Delivery</span>
+                <span className="text-slate-500 ml-2">Estimated: 1–3 business days</span>
+              </div>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-teal-600 mt-0.5">↩️</span>
+              <div>
+                <span className="font-medium text-slate-800">7-Day Returns</span>
+                <span className="text-slate-500 ml-2">Easy hassle-free return & exchange</span>
+              </div>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-teal-600 mt-0.5">🔒</span>
+              <div>
+                <span className="font-medium text-slate-800">100% Genuine</span>
+                <span className="text-slate-500 ml-2">Sourced directly from authorized distributors</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs: Description / Specs / Reviews */}
+      <div className="mt-6 bg-white rounded-2xl border border-slate-100 overflow-hidden">
+        <div className="flex border-b border-slate-100">
+          {(['description', 'specs', 'reviews'] as const).map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-6 py-3.5 text-sm font-semibold capitalize transition-colors ${
+                activeTab === tab
+                  ? 'text-teal-700 border-b-2 border-teal-700 bg-teal-50/50'
+                  : 'text-slate-500 hover:text-slate-700'
+              }`}
+              style={{ fontFamily: 'Poppins, sans-serif' }}
+            >
+              {tab === 'reviews' ? `Reviews (${product.reviews.toLocaleString()})` : tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
+        </div>
+
+        <div className="p-6">
+          {activeTab === 'description' && (
+            <div>
+              <p className="text-slate-700 leading-relaxed text-sm md:text-base">{product.description}</p>
+              <ul className="mt-4 space-y-2">
+                {['Genuine product backed by Kampa quality guarantee', 'Pan-India delivery, typically 1–3 business days', '7-day easy return & exchange policy', 'Secure payment via UPI, cards, or net banking'].map(f => (
+                  <li key={f} className="flex items-start gap-2 text-sm text-slate-600">
+                    <span className="text-teal-600 mt-0.5 font-bold">✓</span>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {activeTab === 'specs' && product.specs && (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <tbody>
+                  {Object.entries(product.specs).map(([key, val], i) => (
+                    <tr key={key} className={i % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
+                      <td className="py-2.5 px-4 text-slate-500 font-medium w-40">{key}</td>
+                      <td className="py-2.5 px-4 text-slate-800">{val}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {activeTab === 'reviews' && (
+            <div>
+              {/* Rating summary */}
+              <div className="flex items-start gap-6 mb-6 pb-6 border-b border-slate-100">
+                <div className="text-center">
+                  <div className="text-5xl font-extrabold text-slate-900" style={{ fontFamily: 'Poppins, sans-serif' }}>{product.rating}</div>
+                  <div className="flex justify-center my-1">
+                    <StarRating rating={product.rating} />
+                  </div>
+                  <div className="text-xs text-slate-500">{product.reviews.toLocaleString()} ratings</div>
+                </div>
+                <div className="flex-1 space-y-1.5">
+                  {[5, 4, 3, 2, 1].map(star => {
+                    const pct = star === 5 ? 62 : star === 4 ? 22 : star === 3 ? 10 : star === 2 ? 4 : 2
+                    return (
+                      <div key={star} className="flex items-center gap-2 text-xs">
+                        <span className="text-slate-500 w-4">{star}★</span>
+                        <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                          <div className="h-full bg-amber-400 rounded-full" style={{ width: `${pct}%` }} />
+                        </div>
+                        <span className="text-slate-400 w-6 text-right">{pct}%</span>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Review list */}
+              <div className="space-y-5">
+                {mockReviews.map(r => (
+                  <div key={r.name} className="pb-5 border-b border-slate-100 last:border-0">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-teal-100 text-teal-700 font-bold text-sm flex items-center justify-center" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                          {r.name[0]}
+                        </div>
+                        <span className="font-semibold text-sm text-slate-800">{r.name}</span>
+                        <span className="text-[10px] text-teal-600 bg-teal-50 px-1.5 py-0.5 rounded font-semibold">✓ Verified Purchase</span>
+                      </div>
+                      <span className="text-xs text-slate-400">{r.date}</span>
+                    </div>
+                    <div className="flex gap-0.5 mb-1.5">
+                      <StarRating rating={r.rating} />
+                    </div>
+                    <p className="text-sm font-semibold text-slate-800 mb-1">{r.title}</p>
+                    <p className="text-sm text-slate-600 leading-relaxed">{r.text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Related products */}
+      {related.length > 0 && (
+        <section className="mt-10">
+          <h2 className="text-lg font-bold text-slate-900 mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>You May Also Like</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {related.map(p => <ProductCard key={p.id} product={p} />)}
+          </div>
+        </section>
+      )}
+    </div>
+  )
+}
