@@ -23,6 +23,12 @@ interface AppState {
   setLoggedIn: (v: boolean) => void
   wishlist: string[]
   toggleWishlist: (productId: string) => void
+  compareList: string[]
+  toggleCompare: (productId: string) => void
+  recentlyViewed: string[]
+  addRecentlyViewed: (productId: string) => void
+  kampaCoins: number
+  addKampaCoins: (amount: number) => void
 }
 
 const AppContext = createContext<AppState | null>(null)
@@ -34,6 +40,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([])
   const [isLoggedIn, setLoggedIn] = useState(false)
   const [wishlist, setWishlist] = useState<string[]>([])
+  const [compareList, setCompareList] = useState<string[]>([])
+  const [recentlyViewed, setRecentlyViewed] = useState<string[]>([])
+  const [kampaCoins, setKampaCoins] = useState(1500) // Default coins for demo
 
   function navigate(p: PageName, params?: { categoryId?: string; productId?: string }) {
     setPage(p)
@@ -63,11 +72,30 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setWishlist(prev => prev.includes(pid) ? prev.filter(id => id !== pid) : [...prev, pid])
   }
 
+  function toggleCompare(pid: string) {
+    setCompareList(prev => prev.includes(pid) ? prev.filter(id => id !== pid) : prev.length >= 3 ? prev : [...prev, pid])
+  }
+
+  function addRecentlyViewed(pid: string) {
+    setRecentlyViewed(prev => {
+      const filtered = prev.filter(id => id !== pid)
+      return [pid, ...filtered].slice(0, 10) // keep last 10
+    })
+  }
+
+  function addKampaCoins(amount: number) {
+    setKampaCoins(prev => prev + amount)
+  }
+
   const cartCount = cart.reduce((s, i) => s + i.quantity, 0)
   const cartTotal = cart.reduce((s, i) => s + i.product.price * i.quantity, 0)
 
   return (
-    <AppContext.Provider value={{ page, categoryId, productId, cart, isLoggedIn, navigate, addToCart, removeFromCart, updateQty, cartCount, cartTotal, setLoggedIn, wishlist, toggleWishlist }}>
+    <AppContext.Provider value={{
+      page, categoryId, productId, navigate, cart, addToCart, removeFromCart, updateQty: updateQty,
+      cartCount, cartTotal, isLoggedIn, setLoggedIn, wishlist, toggleWishlist,
+      compareList, toggleCompare, recentlyViewed, addRecentlyViewed, kampaCoins, addKampaCoins
+    }}>
       {children}
     </AppContext.Provider>
   )
@@ -75,6 +103,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
 export function useApp() {
   const ctx = useContext(AppContext)
-  if (!ctx) throw new Error('useApp outside AppProvider')
-  return ctx
+  if (!ctx) throw new Error('useApp must be used within AppProvider')
+  // Map updateQty to updateQuantity for backwards compatibility
+  return { ...ctx, updateQuantity: ctx.updateQty }
 }

@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useApp } from '@/context/AppContext'
 import { formatPrice } from '@/data'
+import confetti from 'canvas-confetti'
 
 const steps = ['Cart', 'Address', 'Payment', 'Confirmation']
 
 export default function Checkout() {
-  const { cart, cartTotal, navigate } = useApp()
+  const { cart, cartTotal, navigate, kampaCoins, addKampaCoins } = useApp()
   const [step, setStep] = useState(1)
   const [form, setForm] = useState({
     name: '', phone: '', email: '', address: '', city: '', state: '', pincode: '',
@@ -13,16 +14,27 @@ export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card' | 'netbanking' | 'cod'>('upi')
   const [upiId, setUpiId] = useState('')
   const [processing, setProcessing] = useState(false)
+  const [useCoins, setUseCoins] = useState(false)
 
   const shipping = cartTotal > 499 ? 0 : 49
   const tax = Math.round(cartTotal * 0.05)
-  const total = cartTotal + shipping + tax
+  const discountCoins = useCoins ? Math.min(kampaCoins, Math.round(cartTotal * 0.10)) : 0
+  const total = cartTotal + shipping + tax - discountCoins
+  const coinsEarned = Math.round(total * 0.05)
 
   function handlePlaceOrder() {
     setProcessing(true)
     setTimeout(() => {
       setProcessing(false)
       setStep(3)
+      if (useCoins) addKampaCoins(-discountCoins)
+      addKampaCoins(coinsEarned)
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#14b8a6', '#f59e0b', '#3b82f6']
+      })
     }, 2000)
   }
 
@@ -36,7 +48,7 @@ export default function Checkout() {
         </div>
         <h1 className="text-2xl font-extrabold text-slate-900 mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>Order Confirmed! 🎉</h1>
         <p className="text-slate-600 mb-2">Thank you, <strong>{form.name || 'Customer'}</strong>. Your order has been placed successfully.</p>
-        <div className="bg-slate-50 rounded-xl p-4 mb-6 text-left space-y-2">
+        <div className="bg-slate-50 rounded-xl p-4 mb-6 text-left space-y-2 border border-slate-100">
           <div className="flex justify-between text-sm">
             <span className="text-slate-500">Order ID</span>
             <span className="font-semibold text-slate-900">#KMM{Date.now().toString().slice(-8)}</span>
@@ -44,6 +56,16 @@ export default function Checkout() {
           <div className="flex justify-between text-sm">
             <span className="text-slate-500">Order Total</span>
             <span className="font-bold text-slate-900" style={{ fontFamily: 'Poppins, sans-serif' }}>{formatPrice(total)}</span>
+          </div>
+          {discountCoins > 0 && (
+            <div className="flex justify-between text-sm">
+              <span className="text-slate-500">Coins Redeemed</span>
+              <span className="font-semibold text-amber-600">-{discountCoins}</span>
+            </div>
+          )}
+          <div className="flex justify-between text-sm">
+            <span className="text-slate-500">Coins Earned</span>
+            <span className="font-semibold text-green-600">+{coinsEarned} 🪙</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-slate-500">Estimated Delivery</span>
@@ -59,7 +81,7 @@ export default function Checkout() {
           <button onClick={() => navigate('account')} className="px-6 py-2.5 border-2 border-teal-700 text-teal-700 font-semibold rounded-xl hover:bg-teal-700 hover:text-white transition-all text-sm">
             Track Order
           </button>
-          <button onClick={() => navigate('home')} className="px-6 py-2.5 bg-teal-700 text-white font-semibold rounded-xl hover:bg-teal-800 transition-colors text-sm">
+          <button onClick={() => navigate('home')} className="px-6 py-2.5 bg-teal-700 text-white font-semibold rounded-xl hover:bg-teal-800 transition-colors text-sm shadow-[0_0_15px_rgba(20,184,166,0.4)]">
             Continue Shopping
           </button>
         </div>
@@ -249,31 +271,80 @@ export default function Checkout() {
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium text-slate-700 line-clamp-2">{product.name}</p>
                     <p className="text-xs text-slate-400 mt-0.5">Qty: {quantity}</p>
+            {/* Order Summary Sidebar */}
+            <div className="w-full lg:w-80">
+              <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200/60 sticky top-24">
+                <h2 className="text-lg font-bold text-slate-900 mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>Order Summary</h2>
+                <div className="space-y-3 mb-4">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-500">Subtotal ({cart.reduce((a,c)=>a+c.quantity,0)} items)</span>
+                    <span className="font-semibold text-slate-800">{formatPrice(cartTotal)}</span>
                   </div>
-                  <p className="text-xs font-semibold text-slate-800 flex-shrink-0">{formatPrice(product.price * quantity)}</p>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-500">Shipping</span>
+                    <span className="font-semibold text-green-600">{shipping === 0 ? 'FREE' : formatPrice(shipping)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-500">Estimated Tax</span>
+                    <span className="font-semibold text-slate-800">{formatPrice(tax)}</span>
+                  </div>
+                  
+                  {/* Kampa Coins */}
+                  <div className="border-t border-slate-200 pt-3 mt-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-bold text-amber-600 flex items-center gap-1">
+                        🪙 Kampa Coins
+                      </span>
+                      <span className="text-xs font-semibold text-slate-500">Bal: {kampaCoins}</span>
+                    </div>
+                    {kampaCoins > 0 ? (
+                      <label className="flex items-center gap-2 cursor-pointer bg-amber-50 border border-amber-200 p-2 rounded-lg">
+                        <input 
+                          type="checkbox" 
+                          checked={useCoins} 
+                          onChange={(e) => setUseCoins(e.target.checked)} 
+                          className="rounded text-amber-500 focus:ring-amber-500"
+                        />
+                        <span className="text-xs text-amber-800 font-medium">Use up to {Math.min(kampaCoins, Math.round(cartTotal * 0.10))} coins (10% max)</span>
+                      </label>
+                    ) : (
+                      <div className="text-xs text-slate-400 bg-white border border-slate-100 p-2 rounded-lg">You have no coins to redeem.</div>
+                    )}
+                    {useCoins && discountCoins > 0 && (
+                      <div className="flex justify-between text-sm mt-2">
+                        <span className="text-amber-600 font-medium">Coins Discount</span>
+                        <span className="font-bold text-amber-600">-{formatPrice(discountCoins)}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              ))}
+
+                <div className="border-t border-slate-200 pt-4 mb-6">
+                  <div className="flex justify-between items-end mb-1">
+                    <span className="font-bold text-slate-800">Total</span>
+                    <span className="text-2xl font-extrabold text-slate-900 leading-none" style={{ fontFamily: 'Poppins, sans-serif' }}>{formatPrice(total)}</span>
+                  </div>
+                  <p className="text-[10px] text-green-600 font-semibold text-right">You will earn {coinsEarned} coins!</p>
+                </div>
+
+                <button
+                  onClick={step === 2 ? handlePlaceOrder : () => setStep(step + 1)}
+                  disabled={processing}
+                  className="w-full py-3.5 bg-slate-900 hover:bg-black text-white font-bold rounded-xl shadow-[0_4px_20px_rgb(0,0,0,0.15)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {processing ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Processing...
+                    </>
+                  ) : step === 2 ? (
+                    'Place Order'
+                  ) : (
+                    'Continue to Payment'
+                  )}
+                </button>
+              </div>
             </div>
-            <div className="space-y-2 pt-4 border-t border-slate-100 text-sm">
-              <div className="flex justify-between text-slate-600">
-                <span>Subtotal</span>
-                <span>{formatPrice(cartTotal)}</span>
-              </div>
-              <div className="flex justify-between text-slate-600">
-                <span>Delivery</span>
-                <span className={shipping === 0 ? 'text-green-600' : ''}>{shipping === 0 ? 'FREE' : formatPrice(shipping)}</span>
-              </div>
-              <div className="flex justify-between text-slate-600">
-                <span>GST</span>
-                <span>{formatPrice(tax)}</span>
-              </div>
-              <div className="flex justify-between font-bold text-slate-900 text-base pt-2 border-t border-slate-100">
-                <span style={{ fontFamily: 'Poppins, sans-serif' }}>Total</span>
-                <span style={{ fontFamily: 'Poppins, sans-serif' }}>{formatPrice(total)}</span>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   )

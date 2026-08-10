@@ -3,6 +3,7 @@ import { getDiscount, formatPrice } from '@/data'
 import { useApp } from '@/context/AppContext'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import React from 'react'
+import { Scale } from 'lucide-react'
 
 interface Props {
   product: Product
@@ -24,9 +25,10 @@ function StarRating({ rating }: { rating: number }) {
 export { StarRating }
 
 export default function ProductCard({ product, variant = 'grid' }: Props) {
-  const { navigate, addToCart, wishlist, toggleWishlist } = useApp()
+  const { navigate, addToCart, wishlist, toggleWishlist, compareList, toggleCompare } = useApp()
   const discount = getDiscount(product.price, product.mrp)
   const inWishlist = wishlist.includes(product.id)
+  const inCompare = compareList?.includes(product.id)
 
   if (variant === 'list') {
     return (
@@ -107,12 +109,22 @@ export default function ProductCard({ product, variant = 'grid' }: Props) {
           )}
           <button
             onClick={() => toggleWishlist(product.id)}
-            className="absolute top-2 right-2 w-7 h-7 bg-white rounded-full shadow flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity transform-gpu"
+            className="absolute top-2 right-2 w-7 h-7 bg-white rounded-full shadow flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity transform-gpu hover:scale-110"
             style={{ transform: "translateZ(40px)" }}
+            title="Wishlist"
           >
             <svg className={`w-4 h-4 ${inWishlist ? 'text-red-500 fill-current' : 'text-slate-400'}`} fill={inWishlist ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
+          </button>
+          
+          <button
+            onClick={() => toggleCompare(product.id)}
+            className="absolute top-10 right-2 w-7 h-7 bg-white rounded-full shadow flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity transform-gpu hover:scale-110"
+            style={{ transform: "translateZ(40px)" }}
+            title="Compare"
+          >
+            <Scale size={14} className={inCompare ? 'text-teal-600' : 'text-slate-400'} />
           </button>
           {!product.inStock && (
             <div className="absolute inset-0 bg-white/70 flex items-center justify-center transform-gpu" style={{ transform: "translateZ(10px)" }}>

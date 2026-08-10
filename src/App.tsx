@@ -10,6 +10,8 @@ import Login from '@/pages/Login'
 import Account from '@/pages/Account'
 import LivePurchaseToast from '@/components/LivePurchaseToast'
 import AIAssistant from '@/components/AIAssistant'
+import CompareDrawer from '@/components/CompareDrawer'
+import RecentlyViewed from '@/components/RecentlyViewed'
 
 function AppShell() {
   const { page } = useApp()
@@ -26,9 +28,12 @@ function AppShell() {
         {page === 'login' && <Login />}
         {page === 'account' && <Account />}
       </main>
+      
+      <RecentlyViewed />
       {page !== 'checkout' && <Footer />}
       <LivePurchaseToast />
       <AIAssistant />
+      <CompareDrawer />
     </div>
   )
 }

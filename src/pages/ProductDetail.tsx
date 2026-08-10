@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useApp } from '@/context/AppContext'
 import { products, formatPrice, getDiscount } from '@/data'
 import ProductCard from '@/components/ProductCard'
@@ -11,11 +11,26 @@ const mockReviews = [
 ]
 
 export default function ProductDetail() {
-  const { productId, navigate, addToCart } = useApp()
+  const { productId, navigate, addToCart, addRecentlyViewed } = useApp()
   const product = products.find(p => p.id === productId) ?? products[0]
   const [qty, setQty] = useState(1)
   const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'reviews'>('description')
   const [added, setAdded] = useState(false)
+  const [zoom, setZoom] = useState(false)
+  const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 })
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect()
+    const x = ((e.clientX - left) / width) * 100
+    const y = ((e.clientY - top) / height) * 100
+    setZoomPos({ x, y })
+  }
+
+  useEffect(() => {
+    if (product) {
+      addRecentlyViewed(product.id)
+    }
+  }, [product, addRecentlyViewed])
 
   const discount = getDiscount(product.price, product.mrp)
   const related = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4)
@@ -46,10 +61,20 @@ export default function ProductDetail() {
 
       {/* Main product section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 bg-white rounded-2xl border border-slate-100 p-6">
-        {/* Image */}
+        {/* Image Magnifier */}
         <div className="space-y-3">
-          <div className="aspect-square bg-slate-50 rounded-xl overflow-hidden">
-            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+          <div 
+            className="aspect-square bg-slate-50 rounded-xl overflow-hidden relative cursor-crosshair"
+            onMouseEnter={() => setZoom(true)}
+            onMouseLeave={() => setZoom(false)}
+            onMouseMove={handleMouseMove}
+          >
+            <img 
+              src={product.image} 
+              alt={product.name} 
+              className={`w-full h-full object-cover transition-transform duration-200 ${zoom ? 'scale-[2]' : 'scale-100'}`} 
+              style={zoom ? { transformOrigin: `${zoomPos.x}% ${zoomPos.y}%` } : undefined}
+            />
           </div>
           {/* Thumbnail strip */}
           <div className="flex gap-2">
@@ -290,6 +315,37 @@ export default function ProductDetail() {
           </div>
         </section>
       )}
+      {/* Sticky Add-to-Cart Bar (Desktop & Mobile) */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-slate-200 p-3 shadow-[0_-4px_20px_rgb(0,0,0,0.05)] z-[60] flex items-center justify-between md:justify-center md:gap-12 transition-transform">
+        <div className="hidden md:flex items-center gap-4">
+          <img src={product.image} className="w-12 h-12 rounded-lg object-cover" />
+          <div>
+            <p className="text-sm font-bold text-slate-800 line-clamp-1" style={{ fontFamily: 'Poppins, sans-serif' }}>{product.name}</p>
+            <p className="text-xs text-teal-700 font-extrabold">{formatPrice(product.price)}</p>
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="flex items-center border border-slate-200 rounded-lg bg-white p-1">
+            <button onClick={() => setQty(Math.max(1, qty - 1))} className="w-8 h-8 flex items-center justify-center text-slate-600 hover:bg-slate-100 rounded-md font-medium">-</button>
+            <span className="w-8 text-center text-sm font-semibold">{qty}</span>
+            <button onClick={() => setQty(qty + 1)} className="w-8 h-8 flex items-center justify-center text-slate-600 hover:bg-slate-100 rounded-md font-medium">+</button>
+          </div>
+          
+          <button
+            onClick={handleAddToCart}
+            disabled={!product.inStock}
+            className={`flex-1 md:w-48 py-2.5 rounded-lg text-sm font-bold shadow-lg transition-all ${
+              added ? 'bg-green-500 text-white shadow-green-500/30' : 
+              !product.inStock ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 
+              'bg-teal-600 hover:bg-teal-500 text-white shadow-teal-600/30'
+            }`}
+          >
+            {added ? '✓ Added' : product.inStock ? 'Add to Cart' : 'Out of Stock'}
+          </button>
+        </div>
+      </div>
+      
     </div>
   )
 }

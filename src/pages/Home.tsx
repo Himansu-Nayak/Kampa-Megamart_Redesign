@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useApp } from '@/context/AppContext'
 import { categories, products, deals, formatPrice, getDiscount } from '@/data'
 import ProductCard from '@/components/ProductCard'
+import ShoppableFeed from '@/components/ShoppableFeed'
 import { motion } from 'framer-motion'
 
 const heroSlides = [
@@ -283,6 +284,9 @@ export default function Home() {
               ))}
           </div>
         </motion.section>
+
+        {/* Shoppable Feed */}
+        <ShoppableFeed />
 
         {/* Category feature banners */}
         <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.6 }} className="py-6">
