@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { createPortal } from 'react-dom'
 import { useApp } from '@/context/AppContext'
 import { formatPrice } from '@/data'
 
@@ -21,6 +23,7 @@ export default function Account() {
   const [tab, setTab] = useState<Tab>('orders')
   const [profileForm, setProfileForm] = useState({ name: 'Rahul Verma', email: 'rahul@example.com', phone: '+91 98765 43210' })
   const [profileSaved, setProfileSaved] = useState(false)
+  const [activeModal, setActiveModal] = useState<{ type: string; orderId: string } | null>(null)
 
   if (!isLoggedIn) {
     return (
@@ -120,16 +123,16 @@ export default function Account() {
                   <div className="flex items-center gap-2 mt-4">
                     {order.status === 'Delivered' ? (
                       <>
-                        <button className="text-xs text-teal-700 border border-teal-700 hover:bg-teal-700 hover:text-white rounded-lg px-3 py-1.5 transition-all font-medium">Write a Review</button>
-                        <button className="text-xs text-slate-600 border border-slate-200 hover:bg-slate-50 rounded-lg px-3 py-1.5 transition-colors font-medium">Reorder</button>
-                        <button className="text-xs text-slate-600 border border-slate-200 hover:bg-slate-50 rounded-lg px-3 py-1.5 transition-colors font-medium">Return / Exchange</button>
+                        <button onClick={() => setActiveModal({ type: 'review', orderId: order.id })} className="text-xs text-teal-700 border border-teal-700 hover:bg-teal-700 hover:text-white rounded-lg px-3 py-1.5 transition-all font-medium">Write a Review</button>
+                        <button onClick={() => navigate('category', { categoryId: 'all' })} className="text-xs text-slate-600 border border-slate-200 hover:bg-slate-50 rounded-lg px-3 py-1.5 transition-colors font-medium">Reorder</button>
+                        <button onClick={() => setActiveModal({ type: 'return', orderId: order.id })} className="text-xs text-slate-600 border border-slate-200 hover:bg-slate-50 rounded-lg px-3 py-1.5 transition-colors font-medium">Return / Exchange</button>
                       </>
                     ) : (
                       <>
-                        <button className="text-xs text-teal-700 border border-teal-700 hover:bg-teal-700 hover:text-white rounded-lg px-3 py-1.5 transition-all font-medium">Track Order</button>
-                        <button className="text-xs text-slate-600 border border-slate-200 hover:bg-slate-50 rounded-lg px-3 py-1.5 transition-colors font-medium">View Details</button>
+                        <button onClick={() => setActiveModal({ type: 'track', orderId: order.id })} className="text-xs text-teal-700 border border-teal-700 hover:bg-teal-700 hover:text-white rounded-lg px-3 py-1.5 transition-all font-medium">Track Order</button>
+                        <button onClick={() => setActiveModal({ type: 'details', orderId: order.id })} className="text-xs text-slate-600 border border-slate-200 hover:bg-slate-50 rounded-lg px-3 py-1.5 transition-colors font-medium">View Details</button>
                         {order.status === 'Processing' && (
-                          <button className="text-xs text-red-600 border border-red-200 hover:bg-red-50 rounded-lg px-3 py-1.5 transition-colors font-medium">Cancel</button>
+                          <button onClick={() => setActiveModal({ type: 'cancel', orderId: order.id })} className="text-xs text-red-600 border border-red-200 hover:bg-red-50 rounded-lg px-3 py-1.5 transition-colors font-medium">Cancel</button>
                         )}
                       </>
                     )}
@@ -233,6 +236,96 @@ export default function Account() {
           )}
         </div>
       </div>
+
+      {/* Interactive Modals via Portal */}
+      {createPortal(
+        <AnimatePresence>
+          {activeModal && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setActiveModal(null)}
+                className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
+              >
+                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                  <h3 className="font-bold text-slate-900" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                    {activeModal.type === 'review' && 'Write a Review'}
+                    {activeModal.type === 'track' && 'Track Order'}
+                    {activeModal.type === 'return' && 'Return / Exchange'}
+                    {activeModal.type === 'details' && 'Order Details'}
+                    {activeModal.type === 'cancel' && 'Cancel Order'}
+                  </h3>
+                  <button onClick={() => setActiveModal(null)} className="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                  </button>
+                </div>
+                
+                <div className="p-6">
+                  {/* Review UI */}
+                  {activeModal.type === 'review' && (
+                    <div className="space-y-4">
+                      <p className="text-sm text-slate-500">Rate your experience with order #{activeModal.orderId}</p>
+                      <div className="flex gap-2 text-2xl text-slate-200">
+                        {[1,2,3,4,5].map(star => (
+                          <button key={star} className="hover:text-amber-400 transition-colors">★</button>
+                        ))}
+                      </div>
+                      <textarea placeholder="Tell us what you loved..." className="w-full h-24 border border-slate-200 rounded-xl p-3 text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-100 resize-none"></textarea>
+                      <button onClick={() => setActiveModal(null)} className="w-full py-2.5 bg-teal-700 hover:bg-teal-800 text-white font-semibold rounded-xl transition-colors">Submit Review</button>
+                    </div>
+                  )}
+
+                  {/* Track Order UI */}
+                  {activeModal.type === 'track' && (
+                    <div className="space-y-6 relative">
+                      <div className="absolute left-[11px] top-2 bottom-2 w-0.5 bg-slate-100"></div>
+                      {[
+                        { label: 'Order Confirmed', time: '10:00 AM', done: true },
+                        { label: 'Processing', time: '12:30 PM', done: true },
+                        { label: 'Out for Delivery', time: 'Pending', done: false },
+                        { label: 'Delivered', time: 'Pending', done: false }
+                      ].map((step, idx) => (
+                        <div key={idx} className="relative flex gap-4">
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 z-10 ${step.done ? 'bg-teal-500 text-white shadow-md' : 'bg-white border-2 border-slate-200'}`}>
+                            {step.done && <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
+                          </div>
+                          <div>
+                            <p className={`text-sm font-semibold ${step.done ? 'text-slate-800' : 'text-slate-400'}`}>{step.label}</p>
+                            <p className="text-xs text-slate-400">{step.time}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Generic Feedback for others */}
+                  {['return', 'details', 'cancel'].includes(activeModal.type) && (
+                    <div className="text-center space-y-4 py-4">
+                      <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto text-2xl">
+                        {activeModal.type === 'return' ? '📦' : activeModal.type === 'details' ? '📄' : '⚠️'}
+                      </div>
+                      <p className="text-slate-600 text-sm">
+                        Request for order #{activeModal.orderId} is being processed securely.
+                      </p>
+                      <button onClick={() => setActiveModal(null)} className="w-full py-2.5 bg-slate-900 hover:bg-black text-white font-semibold rounded-xl transition-colors">Close</button>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+
     </div>
   )
 }

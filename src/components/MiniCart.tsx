@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
+import { createPortal } from 'react-dom'
 import { X, Trash2, ShoppingBag } from 'lucide-react'
 import { useApp } from '@/context/AppContext'
 import { formatPrice } from '@/data'
@@ -21,7 +22,7 @@ export default function MiniCart({ isOpen, onClose }: Props) {
     navigate('cart')
   }
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
@@ -119,6 +120,7 @@ export default function MiniCart({ isOpen, onClose }: Props) {
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   )
 }

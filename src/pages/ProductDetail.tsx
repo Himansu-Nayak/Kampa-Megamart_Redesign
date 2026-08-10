@@ -176,6 +176,36 @@ export default function ProductDetail() {
             </button>
           </div>
 
+          {/* Group Buy Panel */}
+          <div className="mb-5 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-xl p-4 shadow-sm relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-200 rounded-full blur-3xl opacity-40 -mr-10 -mt-10 group-hover:opacity-60 transition-opacity"></div>
+            <div className="relative z-10 flex flex-col xl:flex-row gap-4 items-start xl:items-center justify-between">
+              <div>
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="text-xs font-bold text-white bg-amber-500 px-2 py-0.5 rounded uppercase tracking-wider">Social Deal</span>
+                  <span className="text-xs font-bold text-red-500 flex items-center gap-1">🔥 Ends in 02:15:30</span>
+                </div>
+                <h4 className="font-extrabold text-slate-800 text-sm" style={{ fontFamily: 'Poppins, sans-serif' }}>Team up & Save 30%</h4>
+                <p className="text-[11px] text-slate-500 mt-0.5">Share with 2 friends to unlock wholesale pricing.</p>
+              </div>
+              <div className="flex flex-col w-full xl:w-auto flex-shrink-0">
+                <button
+                  onClick={() => alert('Invite link copied! Share with 2 friends. (Simulated)')}
+                  className="w-full xl:w-auto py-2 px-4 bg-slate-900 hover:bg-black text-white rounded-lg font-bold text-sm shadow-[0_4px_14px_0_rgb(0,0,0,0.2)] transition-all flex items-center justify-center gap-2 whitespace-nowrap"
+                  style={{ fontFamily: 'Poppins, sans-serif' }}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                  Group Buy • {formatPrice(product.price * 0.7)}
+                </button>
+                <div className="flex justify-center xl:justify-end mt-2 -space-x-1.5">
+                  <div className="w-5 h-5 rounded-full border-2 border-white bg-teal-500 flex items-center justify-center text-[8px] text-white font-bold">You</div>
+                  <div className="w-5 h-5 rounded-full border-2 border-white bg-slate-200 border-dashed"></div>
+                  <div className="w-5 h-5 rounded-full border-2 border-white bg-slate-200 border-dashed"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Delivery info */}
           <div className="space-y-2.5 text-sm">
             <div className="flex items-start gap-2">

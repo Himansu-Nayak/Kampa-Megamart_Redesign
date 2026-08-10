@@ -5,7 +5,7 @@ import { Mic } from 'lucide-react'
 import MiniCart from './MiniCart'
 
 export default function Header() {
-  const { navigate, cartCount, kampaCoins } = useApp()
+  const { cartCount, navigate, isLoggedIn, setLoggedIn, toggleDiscover, kampaCoins } = useApp()
   const [search, setSearch] = useState('')
   const [megaOpen, setMegaOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -162,6 +162,13 @@ export default function Header() {
       <div className="border-t border-slate-200/50 overflow-x-auto scrollbar-hide hidden md:block bg-white/40">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center gap-0.5 py-1">
+            <button
+              onClick={toggleDiscover}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-md whitespace-nowrap shadow-sm hover:shadow-md transition-all mr-2"
+            >
+              <span>📺</span>
+              Discover Reels
+            </button>
             {categories.map(cat => (
               <button
                 key={cat.id}

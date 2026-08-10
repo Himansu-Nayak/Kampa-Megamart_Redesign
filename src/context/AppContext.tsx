@@ -29,6 +29,8 @@ interface AppState {
   addRecentlyViewed: (productId: string) => void
   kampaCoins: number
   addKampaCoins: (amount: number) => void
+  isDiscoverOpen: boolean
+  toggleDiscover: () => void
 }
 
 const AppContext = createContext<AppState | null>(null)
@@ -43,6 +45,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [compareList, setCompareList] = useState<string[]>([])
   const [recentlyViewed, setRecentlyViewed] = useState<string[]>([])
   const [kampaCoins, setKampaCoins] = useState(1500) // Default coins for demo
+  const [isDiscoverOpen, setIsDiscoverOpen] = useState(false)
 
   function navigate(p: PageName, params?: { categoryId?: string; productId?: string }) {
     setPage(p)
@@ -87,6 +90,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setKampaCoins(prev => prev + amount)
   }
 
+  function toggleDiscover() {
+    setIsDiscoverOpen(prev => !prev)
+  }
+
   const cartCount = cart.reduce((s, i) => s + i.quantity, 0)
   const cartTotal = cart.reduce((s, i) => s + i.product.price * i.quantity, 0)
 
@@ -94,7 +101,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     <AppContext.Provider value={{
       page, categoryId, productId, navigate, cart, addToCart, removeFromCart, updateQty: updateQty,
       cartCount, cartTotal, isLoggedIn, setLoggedIn, wishlist, toggleWishlist,
-      compareList, toggleCompare, recentlyViewed, addRecentlyViewed, kampaCoins, addKampaCoins
+      compareList, toggleCompare, recentlyViewed, addRecentlyViewed, kampaCoins, addKampaCoins,
+      isDiscoverOpen, toggleDiscover
     }}>
       {children}
     </AppContext.Provider>

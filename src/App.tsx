@@ -12,6 +12,7 @@ import LivePurchaseToast from '@/components/LivePurchaseToast'
 import AIAssistant from '@/components/AIAssistant'
 import CompareDrawer from '@/components/CompareDrawer'
 import RecentlyViewed from '@/components/RecentlyViewed'
+import DiscoverWidget from '@/components/DiscoverWidget'
 
 function AppShell() {
   const { page } = useApp()
@@ -29,6 +30,7 @@ function AppShell() {
         {page === 'account' && <Account />}
       </main>
       
+      <DiscoverWidget />
       <RecentlyViewed />
       {page !== 'checkout' && <Footer />}
       <LivePurchaseToast />

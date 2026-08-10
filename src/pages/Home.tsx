@@ -3,6 +3,7 @@ import { useApp } from '@/context/AppContext'
 import { categories, products, deals, formatPrice, getDiscount } from '@/data'
 import ProductCard from '@/components/ProductCard'
 import ShoppableFeed from '@/components/ShoppableFeed'
+import ScratchCard from '@/components/ScratchCard'
 import { motion } from 'framer-motion'
 
 const heroSlides = [
@@ -50,6 +51,7 @@ export default function Home() {
   const [slideIndex, setSlideIndex] = useState(0)
   const [activeTab, setActiveTab] = useState('Bestseller')
   const [timeLeft, setTimeLeft] = useState({ hours: 5, minutes: 42, seconds: 13 })
+  const [showScratchCard, setShowScratchCard] = useState(true)
 
   useEffect(() => {
     const t = setInterval(() => setSlideIndex(i => (i + 1) % heroSlides.length), 4500)
@@ -74,6 +76,8 @@ export default function Home() {
 
   return (
     <div>
+      {showScratchCard && <ScratchCard onClose={() => setShowScratchCard(false)} />}
+      
       {/* Hero Carousel */}
       <motion.section initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.6 }} className="relative overflow-hidden">
         <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden bg-black">
