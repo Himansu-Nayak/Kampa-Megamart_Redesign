@@ -6,15 +6,16 @@ export interface CartItem {
   quantity: number
 }
 
-export type PageName = 'home' | 'category' | 'product' | 'cart' | 'checkout' | 'login' | 'account'
+export type PageName = 'home' | 'category' | 'product' | 'cart' | 'checkout' | 'login' | 'account' | 'static'
 
 interface AppState {
   page: PageName
   categoryId: string | null
   productId: string | null
+  staticPageId: string | null
   cart: CartItem[]
   isLoggedIn: boolean
-  navigate: (page: PageName, params?: { categoryId?: string; productId?: string }) => void
+  navigate: (page: PageName, params?: { categoryId?: string; productId?: string; staticPageId?: string }) => void
   addToCart: (product: Product, qty?: number) => void
   removeFromCart: (productId: string) => void
   updateQty: (productId: string, qty: number) => void
@@ -39,6 +40,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [page, setPage] = useState<PageName>('home')
   const [categoryId, setCategoryId] = useState<string | null>(null)
   const [productId, setProductId] = useState<string | null>(null)
+  const [staticPageId, setStaticPageId] = useState<string | null>(null)
   const [cart, setCart] = useState<CartItem[]>([])
   const [isLoggedIn, setLoggedIn] = useState(false)
   const [wishlist, setWishlist] = useState<string[]>([])
@@ -47,10 +49,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [kampaCoins, setKampaCoins] = useState(1500) // Default coins for demo
   const [isDiscoverOpen, setIsDiscoverOpen] = useState(false)
 
-  function navigate(p: PageName, params?: { categoryId?: string; productId?: string }) {
+  function navigate(p: PageName, params?: { categoryId?: string; productId?: string; staticPageId?: string }) {
     setPage(p)
     if (params?.categoryId !== undefined) setCategoryId(params.categoryId)
     if (params?.productId !== undefined) setProductId(params.productId)
+    if (params?.staticPageId !== undefined) setStaticPageId(params.staticPageId)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -99,7 +102,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   return (
     <AppContext.Provider value={{
-      page, categoryId, productId, navigate, cart, addToCart, removeFromCart, updateQty: updateQty,
+      page, categoryId, productId, staticPageId, navigate, cart, addToCart, removeFromCart, updateQty: updateQty,
       cartCount, cartTotal, isLoggedIn, setLoggedIn, wishlist, toggleWishlist,
       compareList, toggleCompare, recentlyViewed, addRecentlyViewed, kampaCoins, addKampaCoins,
       isDiscoverOpen, toggleDiscover

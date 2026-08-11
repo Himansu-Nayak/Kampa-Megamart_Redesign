@@ -155,18 +155,24 @@ export default function Cart() {
               {cartTotal > 499 && <p className="text-xs text-green-600 font-medium">🎉 You're saving {formatPrice(49)} on delivery!</p>}
             </div>
 
-            <button
-              onClick={() => navigate('checkout')}
-              className="mt-4 w-full py-3.5 bg-amber-400 hover:bg-amber-500 text-amber-900 font-bold rounded-xl transition-colors text-sm"
-              style={{ fontFamily: 'Poppins, sans-serif' }}
-            >
-              Proceed to Checkout →
-            </button>
-            <div className="flex items-center justify-center gap-2 mt-3">
-              <span className="text-[10px] text-slate-400">Secured by</span>
-              {['UPI', 'Visa', 'MC', 'RuPay'].map(p => (
-                <span key={p} className="text-[9px] font-semibold border border-slate-200 px-1.5 py-0.5 rounded text-slate-500">{p}</span>
-              ))}
+            <div className="mt-4 flex flex-col items-center gap-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-green-700 bg-green-50 px-3 py-1.5 rounded-md w-full justify-center border border-green-100">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
+                256-Bit Encrypted Secure Checkout
+              </div>
+              <button
+                onClick={() => navigate('checkout')}
+                className="w-full py-3.5 bg-amber-400 hover:bg-amber-500 text-amber-900 font-bold rounded-xl transition-colors text-sm"
+                style={{ fontFamily: 'Poppins, sans-serif' }}
+              >
+                Proceed to Checkout →
+              </button>
+              <div className="flex flex-wrap items-center justify-center gap-2 mt-2">
+                <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Secured by</span>
+                {['UPI', 'Visa', 'MasterCard', 'RuPay', 'Norton'].map(p => (
+                  <span key={p} className="text-[9px] font-bold border border-slate-200 bg-slate-50 px-1.5 py-0.5 rounded text-slate-600 shadow-sm">{p}</span>
+                ))}
+              </div>
             </div>
           </div>
         </div>

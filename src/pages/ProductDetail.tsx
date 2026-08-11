@@ -3,7 +3,8 @@ import { useApp } from '@/context/AppContext'
 import { products, formatPrice, getDiscount } from '@/data'
 import ProductCard from '@/components/ProductCard'
 import { StarRating } from '@/components/ProductCard'
-
+import { motion, AnimatePresence, useInView } from 'framer-motion'
+import { useRef } from 'react'
 const mockReviews = [
   { name: 'Vikas Kumar', rating: 5, date: '12 Jul 2025', title: 'Excellent value for money', text: 'Exceeded my expectations. Build quality is solid and performance is snappy. Delivery was a day early!' },
   { name: 'Sneha Patel', rating: 4, date: '28 Jun 2025', title: 'Very good, minor issues', text: 'Overall great product. Setup was simple and it works as advertised. Packaging could be slightly better but the product itself is 5-star.' },
@@ -18,6 +19,8 @@ export default function ProductDetail() {
   const [added, setAdded] = useState(false)
   const [zoom, setZoom] = useState(false)
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 })
+  const ctaRef = useRef<HTMLDivElement>(null)
+  const isCtaInView = useInView(ctaRef, { margin: "0px 0px -100px 0px" })
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect()
@@ -154,7 +157,7 @@ export default function ProductDetail() {
           </div>
 
           {/* CTAs */}
-          <div className="flex gap-3 mb-5">
+          <div className="flex gap-3 mb-4" ref={ctaRef}>
             <button
               onClick={handleAddToCart}
               disabled={!product.inStock}
@@ -174,6 +177,22 @@ export default function ProductDetail() {
             >
               ⚡ Buy Now
             </button>
+          </div>
+
+          {/* Guaranteed Safe Checkout */}
+          <div className="mb-6 p-3 bg-slate-50 border border-slate-100 rounded-xl flex flex-col items-center">
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1">
+              <svg className="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
+              Guaranteed Safe Checkout
+            </p>
+            <div className="flex flex-wrap justify-center gap-2 items-center text-[10px] font-bold text-slate-400">
+              <span className="border border-slate-200 bg-white px-2 py-1 rounded shadow-sm">VISA</span>
+              <span className="border border-slate-200 bg-white px-2 py-1 rounded shadow-sm">MasterCard</span>
+              <span className="border border-slate-200 bg-white px-2 py-1 rounded shadow-sm">UPI</span>
+              <span className="border border-slate-200 bg-white px-2 py-1 rounded shadow-sm">RuPay</span>
+              <span className="border border-slate-200 bg-white px-2 py-1 rounded shadow-sm flex items-center gap-0.5"><span className="text-yellow-500">✔</span> Norton</span>
+              <span className="border border-slate-200 bg-white px-2 py-1 rounded shadow-sm flex items-center gap-0.5"><span className="text-red-500">🛡</span> McAfee</span>
+            </div>
           </div>
 
           {/* Group Buy Panel */}
@@ -346,7 +365,7 @@ export default function ProductDetail() {
         </section>
       )}
       {/* Sticky Add-to-Cart Bar (Desktop & Mobile) */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-slate-200 p-3 shadow-[0_-4px_20px_rgb(0,0,0,0.05)] z-[60] flex items-center justify-between md:justify-center md:gap-12 transition-transform">
+      <div className="fixed bottom-16 md:bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-slate-200 p-3 shadow-[0_-4px_20px_rgb(0,0,0,0.05)] z-[40] flex items-center justify-between md:justify-center md:gap-12 transition-transform">
         <div className="hidden md:flex items-center gap-4">
           <img src={product.image} className="w-12 h-12 rounded-lg object-cover" />
           <div>
@@ -376,6 +395,38 @@ export default function ProductDetail() {
         </div>
       </div>
       
+      {/* Floating Action Bar */}
+      <AnimatePresence>
+        {!isCtaInView && (
+          <motion.div
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 100 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="fixed bottom-0 md:bottom-6 left-0 right-0 md:left-1/2 md:-translate-x-1/2 md:w-max z-50 p-4 md:p-0 pointer-events-none"
+          >
+            <div className="bg-white/80 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgb(0,0,0,0.12)] p-3 md:p-2 md:pr-3 rounded-2xl md:rounded-full flex items-center gap-4 w-full md:w-[500px] pointer-events-auto">
+              <div className="hidden md:block w-12 h-12 bg-slate-100 rounded-full overflow-hidden flex-shrink-0">
+                <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-slate-900 truncate" style={{ fontFamily: 'Poppins, sans-serif' }}>{product.name}</p>
+                <p className="text-xs font-semibold text-teal-700">{formatPrice(product.price)}</p>
+              </div>
+              <button
+                onClick={handleAddToCart}
+                disabled={!product.inStock}
+                className={`px-6 py-2.5 rounded-full font-bold text-sm shadow-md transition-all flex-shrink-0 ${
+                  added ? 'bg-green-500 text-white' : 'bg-slate-900 hover:bg-black text-white'
+                } disabled:bg-slate-300 disabled:text-slate-500`}
+                style={{ fontFamily: 'Poppins, sans-serif' }}
+              >
+                {added ? '✓ Added' : 'Add to Cart'}
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

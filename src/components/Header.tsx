@@ -1,14 +1,14 @@
 import { useState, useRef, useEffect } from 'react'
 import { useApp } from '@/context/AppContext'
 import { categories, products, formatPrice } from '@/data'
-import { Mic } from 'lucide-react'
+import { Mic, Search } from 'lucide-react'
 import MiniCart from './MiniCart'
+import SearchPalette from './SearchPalette'
 
 export default function Header() {
   const { cartCount, navigate, isLoggedIn, setLoggedIn, toggleDiscover, kampaCoins } = useApp()
   const [search, setSearch] = useState('')
   const [megaOpen, setMegaOpen] = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
   const [showResults, setShowResults] = useState(false)
   const [isCartOpen, setIsCartOpen] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
@@ -26,7 +26,6 @@ export default function Header() {
   function handleSearch(e: React.FormEvent) {
     e.preventDefault()
     navigate('category', { categoryId: 'all' })
-    setMobileOpen(false)
   }
 
   return (
@@ -38,12 +37,6 @@ export default function Header() {
 
       {/* Main header row */}
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
-        {/* Mobile menu button */}
-        <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden p-1.5 rounded-lg hover:bg-slate-100 transition-colors">
-          <svg className="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mobileOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'} />
-          </svg>
-        </button>
 
         {/* Logo */}
         <button onClick={() => navigate('home')} className="flex items-center gap-2 flex-shrink-0 group">
@@ -85,53 +78,35 @@ export default function Header() {
             )}
           </div>
 
-          <div className="flex-1 relative flex min-w-0" ref={searchRef}>
-            <input
-              type="text"
-              value={search}
-              onChange={e => { setSearch(e.target.value); setShowResults(true) }}
-              onFocus={() => setShowResults(true)}
-              onKeyDown={e => e.key === 'Enter' && handleSearch(e)}
-              placeholder="Search premium products, brands..."
-              className="flex-1 min-w-0 border border-slate-200 lg:border-l-0 lg:rounded-none rounded-l-lg px-4 py-2.5 text-sm bg-white/50 focus:bg-white focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
-            />
-            <button type="button" className="absolute right-14 top-1/2 -translate-y-1/2 text-slate-400 hover:text-teal-600 transition-colors" onClick={() => alert('Voice search activated (simulated)')}>
-              <Mic size={18} />
+          <div className="flex-1 relative flex min-w-0 h-10 lg:h-11">
+            <button
+              onClick={() => setShowResults(true)}
+              className="w-full h-full flex items-center justify-between border border-slate-200/80 lg:border-l-0 lg:rounded-none rounded-l-lg px-4 text-sm bg-white/40 hover:bg-white/60 backdrop-blur-sm transition-all text-slate-500 shadow-inner group"
+            >
+              <span className="truncate">Search premium products...</span>
+              <div className="flex items-center gap-2">
+                <kbd className="hidden lg:inline-flex items-center gap-1 font-sans text-[10px] font-bold text-slate-400 bg-white border border-slate-200 rounded px-1.5 py-0.5 shadow-sm group-hover:border-slate-300">
+                  <span className="text-xs">⌘</span>K
+                </kbd>
+                <Search className="w-4 h-4 text-slate-400 group-hover:text-teal-600 transition-colors" />
+              </div>
             </button>
-            <button onClick={handleSearch} className="px-5 py-2.5 bg-slate-900 hover:bg-black active:bg-slate-800 text-white rounded-r-lg transition-colors flex-shrink-0 shadow-sm">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+            <button onClick={() => setShowResults(true)} className="px-5 h-full bg-slate-900 hover:bg-black active:bg-slate-800 text-white rounded-r-lg transition-colors flex-shrink-0 shadow-[0_2px_10px_rgb(0,0,0,0.1)]">
+              <span className="font-semibold text-sm hidden sm:block">Search</span>
+              <Search className="w-4 h-4 sm:hidden" />
             </button>
 
-            {/* Live Search Results Dropdown */}
-            {showResults && search.trim().length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-slate-100 overflow-hidden z-[60]">
-                {products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()) || p.brand.toLowerCase().includes(search.toLowerCase())).slice(0, 5).map(p => (
-                  <button key={p.id} onClick={() => { navigate('product', { productId: p.id }); setShowResults(false); setSearch('') }} className="w-full flex items-center gap-3 p-3 hover:bg-slate-50 transition-colors text-left border-b border-slate-50 last:border-0">
-                    <img src={p.image} alt={p.name} className="w-10 h-10 rounded-md object-cover border border-slate-100" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-slate-800 truncate" style={{ fontFamily: 'Poppins, sans-serif' }}>{p.name}</p>
-                      <p className="text-[10px] text-slate-400 uppercase tracking-wider">{p.brand}</p>
-                    </div>
-                    <span className="text-sm font-bold text-teal-700">{formatPrice(p.price)}</span>
-                  </button>
-                ))}
-                {products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()) || p.brand.toLowerCase().includes(search.toLowerCase())).length === 0 && (
-                  <div className="p-4 text-center text-sm text-slate-500">No products found for "{search}"</div>
-                )}
-              </div>
-            )}
+            <SearchPalette isOpen={showResults} onClose={() => setShowResults(false)} />
           </div>
         </div>
 
         {/* Right actions */}
         <div className="flex items-center gap-1 flex-shrink-0">
-          <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 mr-2 bg-gradient-to-r from-amber-100 to-amber-50 rounded-full border border-amber-200">
-            <span className="text-lg">🪙</span>
+          <div className="flex items-center gap-1.5 px-2 lg:px-3 py-1 lg:py-1.5 mr-1 lg:mr-2 bg-gradient-to-r from-amber-100 to-amber-50 rounded-full border border-amber-200">
+            <span className="text-sm lg:text-lg">🪙</span>
             <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-amber-600 uppercase leading-none">Kampa Coins</span>
-              <span className="text-xs font-extrabold text-amber-900 leading-none">{kampaCoins.toLocaleString()}</span>
+              <span className="hidden lg:block text-[10px] font-bold text-amber-600 uppercase leading-none">Kampa Coins</span>
+              <span className="text-[10px] lg:text-xs font-extrabold text-amber-900 leading-none">{kampaCoins.toLocaleString()}</span>
             </div>
           </div>
 
@@ -142,7 +117,7 @@ export default function Header() {
             <span className="text-xs font-medium">Account</span>
           </button>
 
-          <button onClick={() => setIsCartOpen(true)} className="relative flex items-center gap-1.5 px-2.5 py-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-700">
+          <button onClick={() => setIsCartOpen(true)} className="header-cart-icon relative hidden md:flex items-center gap-1.5 px-2.5 py-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-700">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
@@ -159,7 +134,7 @@ export default function Header() {
       <MiniCart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
       {/* Category nav strip */}
-      <div className="border-t border-slate-200/50 overflow-x-auto scrollbar-hide hidden md:block bg-white/40">
+      <div className="border-t border-slate-200/50 overflow-x-auto scrollbar-hide block bg-white/40">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center gap-0.5 py-1">
             <button
@@ -183,41 +158,7 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="md:hidden border-t border-slate-100 bg-white py-2 px-4 shadow-lg">
-          <form onSubmit={handleSearch} className="flex mb-3">
-            <input
-              type="text"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Search products..."
-              className="flex-1 border border-slate-200 rounded-l-lg px-3 py-2 text-sm focus:outline-none focus:border-teal-500"
-            />
-            <button type="submit" className="px-3 py-2 bg-teal-700 text-white rounded-r-lg">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </button>
-          </form>
-          <div className="grid grid-cols-2 gap-1">
-            {categories.map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => { navigate('category', { categoryId: cat.id }); setMobileOpen(false) }}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-teal-50 hover:text-teal-700 rounded-lg transition-colors"
-              >
-                <span>{cat.emoji}</span>
-                <span className="font-medium text-xs">{cat.name}</span>
-              </button>
-            ))}
-          </div>
-          <div className="flex gap-2 mt-3 pt-3 border-t border-slate-100">
-            <button onClick={() => { navigate('login'); setMobileOpen(false) }} className="flex-1 text-center py-2 text-sm text-teal-700 border border-teal-700 rounded-lg font-medium">Sign In</button>
-            <button onClick={() => { navigate('account'); setMobileOpen(false) }} className="flex-1 text-center py-2 text-sm bg-teal-700 text-white rounded-lg font-medium">My Account</button>
-          </div>
-        </div>
-      )}
+
     </header>
   )
 }

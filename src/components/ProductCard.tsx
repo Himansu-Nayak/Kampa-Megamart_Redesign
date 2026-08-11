@@ -24,17 +24,78 @@ function StarRating({ rating }: { rating: number }) {
 
 export { StarRating }
 
+function BlurImage({ src, alt, className }: { src: string, alt: string, className?: string }) {
+  const [isLoaded, setIsLoaded] = React.useState(false)
+  return (
+    <>
+      {!isLoaded && <div className={`absolute inset-0 bg-slate-200 animate-pulse ${className}`} />}
+      <img
+        src={src}
+        alt={alt}
+        onLoad={() => setIsLoaded(true)}
+        className={`transition-all duration-700 ${isLoaded ? 'blur-0 opacity-100' : 'blur-md opacity-0'} ${className}`}
+      />
+    </>
+  )
+}
+
+function flyToCart(e: React.MouseEvent, imgSrc: string) {
+  const rect = (e.target as HTMLElement).closest('.product-card-container')?.getBoundingClientRect()
+  if (!rect) return
+  
+  const ghost = document.createElement('img')
+  ghost.src = imgSrc
+  ghost.style.position = 'fixed'
+  ghost.style.left = `${rect.left + rect.width / 2 - 30}px`
+  ghost.style.top = `${rect.top + 30}px`
+  ghost.style.width = '60px'
+  ghost.style.height = '60px'
+  ghost.style.objectFit = 'cover'
+  ghost.style.borderRadius = '12px'
+  ghost.style.zIndex = '9999'
+  ghost.style.pointerEvents = 'none'
+  ghost.style.boxShadow = '0 20px 40px rgba(0,0,0,0.3)'
+  ghost.style.transition = 'all 0.8s cubic-bezier(0.2, 1, 0.3, 1)'
+  document.body.appendChild(ghost)
+
+  setTimeout(() => {
+    const isMobile = window.innerWidth < 768
+    const target = document.querySelector(isMobile ? '.bottom-cart-icon' : '.header-cart-icon')
+    if (target) {
+      const targetRect = target.getBoundingClientRect()
+      ghost.style.left = `${targetRect.left + targetRect.width / 2 - 10}px`
+      ghost.style.top = `${targetRect.top + targetRect.height / 2 - 10}px`
+    } else {
+      ghost.style.left = `calc(100vw - 40px)`
+      ghost.style.top = `20px`
+    }
+    ghost.style.transform = 'scale(0.1)'
+    ghost.style.opacity = '0.5'
+  }, 10)
+
+  setTimeout(() => {
+    if (document.body.contains(ghost)) {
+      document.body.removeChild(ghost)
+    }
+  }, 800)
+}
+
 export default function ProductCard({ product, variant = 'grid' }: Props) {
   const { navigate, addToCart, wishlist, toggleWishlist, compareList, toggleCompare } = useApp()
   const discount = getDiscount(product.price, product.mrp)
   const inWishlist = wishlist.includes(product.id)
   const inCompare = compareList?.includes(product.id)
 
+  const handleAddToCart = (e: React.MouseEvent) => {
+    addToCart(product)
+    flyToCart(e, product.image)
+  }
+
   if (variant === 'list') {
     return (
-      <div className="bg-white/80 backdrop-blur-xl rounded-2xl border border-white/50 shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-0.5 transition-all duration-300 flex gap-4 p-4">
+      <div className="product-card-container bg-white/80 backdrop-blur-xl rounded-2xl border border-white/50 shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-0.5 transition-all duration-300 flex gap-4 p-4">
         <button onClick={() => navigate('product', { productId: product.id })} className="relative w-28 h-28 flex-shrink-0 bg-slate-50 rounded-lg overflow-hidden">
-          <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+          <BlurImage src={product.image} alt={product.name} className="w-full h-full object-cover" />
           {product.badge && <BadgePill badge={product.badge} />}
         </button>
         <div className="flex-1 min-w-0 flex flex-col justify-between">
@@ -52,7 +113,7 @@ export default function ProductCard({ product, variant = 'grid' }: Props) {
               <span className="text-xs text-slate-400 line-through ml-2">{formatPrice(product.mrp)}</span>
               {discount > 0 && <span className="text-xs text-green-600 font-semibold ml-1">{discount}% off</span>}
             </div>
-            <button onClick={() => addToCart(product)} disabled={!product.inStock} className="px-5 py-2 bg-slate-900 hover:bg-black disabled:bg-slate-300 text-white text-xs font-semibold rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+            <button onClick={handleAddToCart} disabled={!product.inStock} className="px-5 py-2 bg-slate-900 hover:bg-black disabled:bg-slate-300 text-white text-xs font-semibold rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
               {product.inStock ? 'Add to Cart' : 'Out of Stock'}
             </button>
           </div>
@@ -86,16 +147,17 @@ export default function ProductCard({ product, variant = 'grid' }: Props) {
   }
 
   return (
-    <div style={{ perspective: 1200 }} className="z-10 relative">
+    <div style={{ perspective: 1200 }} className="z-10 relative product-card-container">
       <motion.div
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
+        whileTap={{ scale: 0.98 }}
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
         className="group bg-white/70 backdrop-blur-xl rounded-2xl border border-white/60 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12)] flex flex-col overflow-hidden relative w-full h-full"
       >
         <div className="relative bg-slate-50 overflow-hidden aspect-[4/5] transform-gpu" style={{ transform: "translateZ(20px)" }}>
           <button onClick={() => navigate('product', { productId: product.id })} className="block w-full h-full relative after:absolute after:inset-0 after:bg-gradient-to-t after:from-black/20 after:to-transparent after:opacity-0 group-hover:after:opacity-100 after:transition-opacity after:duration-500">
-            <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            <BlurImage src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
           </button>
           {product.badge && (
             <div className="absolute top-2 left-2 transform-gpu" style={{ transform: "translateZ(30px)" }}>
@@ -109,7 +171,7 @@ export default function ProductCard({ product, variant = 'grid' }: Props) {
           )}
           <button
             onClick={() => toggleWishlist(product.id)}
-            className="absolute top-2 right-2 w-7 h-7 bg-white rounded-full shadow flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity transform-gpu hover:scale-110"
+            className="absolute top-2 right-2 w-7 h-7 bg-white rounded-full shadow flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity transform-gpu hover:scale-110"
             style={{ transform: "translateZ(40px)" }}
             title="Wishlist"
           >
@@ -120,7 +182,7 @@ export default function ProductCard({ product, variant = 'grid' }: Props) {
           
           <button
             onClick={() => toggleCompare(product.id)}
-            className="absolute top-10 right-2 w-7 h-7 bg-white rounded-full shadow flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity transform-gpu hover:scale-110"
+            className="absolute top-10 right-2 w-7 h-7 bg-white rounded-full shadow flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity transform-gpu hover:scale-110"
             style={{ transform: "translateZ(40px)" }}
             title="Compare"
           >
@@ -149,7 +211,7 @@ export default function ProductCard({ product, variant = 'grid' }: Props) {
             <p className="text-[11px] text-green-600 font-semibold mt-0.5">Save {formatPrice(product.mrp - product.price)} ({discount}% off)</p>
           )}
           <button
-            onClick={() => addToCart(product)}
+            onClick={handleAddToCart}
             disabled={!product.inStock}
             className="mt-4 w-full py-2.5 bg-slate-900 hover:bg-black disabled:bg-slate-200 disabled:text-slate-400 text-white text-xs font-bold tracking-wide rounded-xl shadow-lg shadow-slate-900/20 hover:shadow-slate-900/40 transition-all duration-300 transform-gpu"
             style={{ transform: "translateZ(30px)" }}

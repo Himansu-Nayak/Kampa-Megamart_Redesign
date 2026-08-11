@@ -333,7 +333,7 @@ export default function Checkout() {
             <button
               onClick={step === 2 ? handlePlaceOrder : () => setStep(step + 1)}
               disabled={processing}
-              className="w-full py-3.5 bg-slate-900 hover:bg-black text-white font-bold rounded-xl shadow-[0_4px_20px_rgb(0,0,0,0.15)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full py-3.5 bg-slate-900 hover:bg-black text-white font-bold rounded-xl shadow-[0_4px_20px_rgb(0,0,0,0.15)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 mb-3"
             >
               {processing ? (
                 <>
@@ -346,6 +346,12 @@ export default function Checkout() {
                 'Continue to Payment'
               )}
             </button>
+            <div className="flex flex-col items-center justify-center gap-2">
+              <div className="flex items-center gap-1.5 text-[10px] font-bold text-green-700 bg-green-50 px-2 py-1 rounded">
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
+                256-Bit Encrypted Secure Checkout
+              </div>
+            </div>
           </div>
         </div>
       </div>

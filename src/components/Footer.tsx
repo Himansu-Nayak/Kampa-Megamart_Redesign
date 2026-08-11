@@ -50,8 +50,18 @@ export default function Footer() {
         <div>
           <h4 className="text-white text-sm font-semibold mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>Company</h4>
           <ul className="space-y-2">
-            {['About Us', 'Careers', 'Press & Media', 'Investor Relations', 'Sustainability'].map(l => (
-              <li key={l}><button className="text-slate-400 hover:text-white text-xs transition-colors">{l}</button></li>
+            {[
+              { label: 'About Us', id: 'about-us' },
+              { label: 'Careers', id: 'careers' },
+              { label: 'Press & Media', id: 'press-media' },
+              { label: 'Investor Relations', id: 'investor-relations' },
+              { label: 'Sustainability', id: 'sustainability' }
+            ].map(l => (
+              <li key={l.id}>
+                <button onClick={() => navigate('static', { staticPageId: l.id })} className="text-slate-400 hover:text-white text-xs transition-colors text-left">
+                  {l.label}
+                </button>
+              </li>
             ))}
           </ul>
         </div>
@@ -60,8 +70,18 @@ export default function Footer() {
         <div>
           <h4 className="text-white text-sm font-semibold mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>Customer Service</h4>
           <ul className="space-y-2">
-            {['Track My Order', 'Return & Refund', 'Cancel an Order', 'FAQs', 'Report a Problem'].map(l => (
-              <li key={l}><button className="text-slate-400 hover:text-white text-xs transition-colors">{l}</button></li>
+            {[
+              { label: 'Track My Order', id: 'track-order' },
+              { label: 'Return & Refund', id: 'return-refund' },
+              { label: 'Cancel an Order', id: 'cancel-order' },
+              { label: 'FAQs', id: 'faqs' },
+              { label: 'Report a Problem', id: 'report-problem' }
+            ].map(l => (
+              <li key={l.id}>
+                <button onClick={() => navigate('static', { staticPageId: l.id })} className="text-slate-400 hover:text-white text-xs transition-colors text-left">
+                  {l.label}
+                </button>
+              </li>
             ))}
           </ul>
         </div>
@@ -70,8 +90,18 @@ export default function Footer() {
         <div>
           <h4 className="text-white text-sm font-semibold mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>Policies</h4>
           <ul className="space-y-2">
-            {['Privacy Policy', 'Terms & Conditions', 'Shipping Policy', 'Return Policy', 'Cookie Policy'].map(l => (
-              <li key={l}><button className="text-slate-400 hover:text-white text-xs transition-colors">{l}</button></li>
+            {[
+              { label: 'Privacy Policy', id: 'privacy-policy' },
+              { label: 'Terms & Conditions', id: 'terms-conditions' },
+              { label: 'Shipping Policy', id: 'shipping-policy' },
+              { label: 'Return Policy', id: 'return-policy' },
+              { label: 'Cookie Policy', id: 'cookie-policy' }
+            ].map(l => (
+              <li key={l.id}>
+                <button onClick={() => navigate('static', { staticPageId: l.id })} className="text-slate-400 hover:text-white text-xs transition-colors text-left">
+                  {l.label}
+                </button>
+              </li>
             ))}
           </ul>
         </div>

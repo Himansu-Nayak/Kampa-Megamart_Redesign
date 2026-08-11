@@ -4,6 +4,7 @@ import { categories, products, deals, formatPrice, getDiscount } from '@/data'
 import ProductCard from '@/components/ProductCard'
 import ShoppableFeed from '@/components/ShoppableFeed'
 import ScratchCard from '@/components/ScratchCard'
+import AnimatedCounter from '@/components/AnimatedCounter'
 import { motion } from 'framer-motion'
 
 const heroSlides = [
@@ -143,21 +144,36 @@ export default function Home() {
         </div>
       </motion.section>
 
+      {/* Featured In & Trusted By */}
+      <div className="bg-slate-50 border-b border-slate-100 py-6 md:py-8">
+        <div className="max-w-7xl mx-auto px-4">
+          <p className="text-center text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-6">Trusted by millions & featured in</p>
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+            {/* Mock logos using text for simplicity, in a real app these would be SVG imports */}
+            <span className="text-xl md:text-2xl font-black font-serif tracking-tighter">Forbes</span>
+            <span className="text-xl md:text-2xl font-extrabold tracking-tight">TechCrunch</span>
+            <span className="text-xl md:text-2xl font-light uppercase tracking-widest">Vogue</span>
+            <span className="flex items-center gap-1.5 border-2 border-current px-2 py-0.5 rounded font-bold text-sm"><span className="text-lg">✔</span> ISO 9001</span>
+            <span className="flex items-center gap-1.5 font-bold text-sm"><span className="text-xl">🔒</span> 256-Bit SSL</span>
+          </div>
+        </div>
+      </div>
+
       {/* Quick trust strip */}
       <div className="bg-white border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-center gap-6 md:gap-12 overflow-x-auto scrollbar-hide">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-center gap-6 md:gap-12 overflow-x-auto scrollbar-hide">
           {[
-            { icon: '🏪', text: '10,000+ Products' },
-            { icon: '🚀', text: 'Next-Day Delivery' },
-            { icon: '✅', text: '100% Genuine' },
-            { icon: '📞', text: 'Call us 24/7' },
-            { icon: '🏬', text: 'Pickup At Any Store' },
-            { icon: '💳', text: 'Secured Payment' },
-            { icon: '🆓', text: '30-days Free Returns' },
+            { icon: '🏪', text: <AnimatedCounter from={0} to={10000} suffix="+" />, label: 'Products' },
+            { icon: '🚀', text: <AnimatedCounter from={0} to={24} suffix="H" />, label: 'Delivery' },
+            { icon: '✅', text: <AnimatedCounter from={0} to={100} suffix="%" />, label: 'Genuine' },
+            { icon: '📞', text: '24/7', label: 'Support' },
+            { icon: '💳', text: '100%', label: 'Secure' },
+            { icon: '🆓', text: <AnimatedCounter from={0} to={30} suffix=" Days" />, label: 'Returns' },
           ].map(t => (
-            <div key={t.text} className="flex items-center gap-1.5 whitespace-nowrap">
-              <span className="text-base">{t.icon}</span>
-              <span className="text-xs font-semibold text-slate-600">{t.text}</span>
+            <div key={t.label} className="flex flex-col items-center gap-1 min-w-[80px]">
+              <span className="text-2xl mb-1">{t.icon}</span>
+              <span className="text-sm font-extrabold text-slate-800" style={{ fontFamily: 'Poppins, sans-serif' }}>{t.text}</span>
+              <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">{t.label}</span>
             </div>
           ))}
         </div>
