@@ -149,7 +149,7 @@ export default function Account() {
                 {mockAddresses.map(addr => (
                   <div key={addr.id} className={`bg-white rounded-xl border-2 p-4 relative ${addr.default ? 'border-teal-700' : 'border-slate-100'}`}>
                     {addr.default && (
-                      <span className="absolute top-3 right-3 text-[10px] font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full">DEFAULT</span>
+                      <span className="absolute top-3 right-3 text-[0.625rem] font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full">DEFAULT</span>
                     )}
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-sm font-bold text-slate-800">{addr.label}</span>

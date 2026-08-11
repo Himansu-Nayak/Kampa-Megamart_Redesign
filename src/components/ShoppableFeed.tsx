@@ -95,7 +95,7 @@ export default function ShoppableFeed() {
                         <div className="flex gap-2">
                           <img src={product.image} className="w-12 h-12 rounded-lg object-cover bg-slate-50" />
                           <div className="flex-1 min-w-0">
-                            <p className="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">{product.brand}</p>
+                            <p className="text-[0.625rem] font-bold text-slate-400 uppercase leading-none mb-1">{product.brand}</p>
                             <p className="text-xs font-semibold text-slate-800 line-clamp-2 leading-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>{product.name}</p>
                           </div>
                         </div>
@@ -107,7 +107,7 @@ export default function ShoppableFeed() {
                         </div>
                         <button 
                           onClick={() => navigate('product', { productId: product.id })} 
-                          className="w-full mt-1 text-[10px] text-center text-slate-500 hover:text-teal-600 font-medium"
+                          className="w-full mt-1 text-[0.625rem] text-center text-slate-500 hover:text-teal-600 font-medium"
                         >
                           View Details →
                         </button>

@@ -42,8 +42,8 @@ export default function Header() {
         <button onClick={() => navigate('home')} className="flex items-center gap-2 flex-shrink-0 group">
           <div className="w-10 h-10 bg-slate-900 group-hover:bg-black rounded-xl flex items-center justify-center text-white font-extrabold text-xl leading-none shadow-md group-hover:shadow-lg transition-all duration-300" style={{ fontFamily: 'Poppins, sans-serif' }}>K</div>
           <div className="hidden sm:flex flex-col leading-none">
-            <span className="text-slate-900 font-extrabold text-[16px] tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>Kampa</span>
-            <span className="text-amber-600 text-[9px] font-bold uppercase tracking-[0.2em]">Megamart</span>
+            <span className="text-slate-900 font-extrabold text-base tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>Kampa</span>
+            <span className="text-amber-600 text-[0.5625rem] font-bold uppercase tracking-[0.2em]">Megamart</span>
           </div>
         </button>
 
@@ -78,14 +78,14 @@ export default function Header() {
             )}
           </div>
 
-          <div className="flex-1 relative flex min-w-0 h-10 lg:h-11">
+          <div className="flex-1 relative flex min-w-0 h-11 lg:h-12">
             <button
               onClick={() => setShowResults(true)}
               className="w-full h-full flex items-center justify-between border border-slate-200/80 lg:border-l-0 lg:rounded-none rounded-l-lg px-4 text-sm bg-white/40 hover:bg-white/60 backdrop-blur-sm transition-all text-slate-500 shadow-inner group"
             >
               <span className="truncate">Search premium products...</span>
               <div className="flex items-center gap-2">
-                <kbd className="hidden lg:inline-flex items-center gap-1 font-sans text-[10px] font-bold text-slate-400 bg-white border border-slate-200 rounded px-1.5 py-0.5 shadow-sm group-hover:border-slate-300">
+                <kbd className="hidden lg:inline-flex items-center gap-1 font-sans text-[0.625rem] font-bold text-slate-400 bg-white border border-slate-200 rounded px-1.5 py-0.5 shadow-sm group-hover:border-slate-300">
                   <span className="text-xs">⌘</span>K
                 </kbd>
                 <Search className="w-4 h-4 text-slate-400 group-hover:text-teal-600 transition-colors" />
@@ -105,8 +105,8 @@ export default function Header() {
           <div className="flex items-center gap-1.5 px-2 lg:px-3 py-1 lg:py-1.5 mr-1 lg:mr-2 bg-gradient-to-r from-amber-100 to-amber-50 rounded-full border border-amber-200">
             <span className="text-sm lg:text-lg">🪙</span>
             <div className="flex flex-col">
-              <span className="hidden lg:block text-[10px] font-bold text-amber-600 uppercase leading-none">Kampa Coins</span>
-              <span className="text-[10px] lg:text-xs font-extrabold text-amber-900 leading-none">{kampaCoins.toLocaleString()}</span>
+              <span className="hidden lg:block text-[0.625rem] font-bold text-amber-600 uppercase leading-none">Kampa Coins</span>
+              <span className="text-[0.625rem] lg:text-xs font-extrabold text-amber-900 leading-none">{kampaCoins.toLocaleString()}</span>
             </div>
           </div>
 
@@ -122,7 +122,7 @@ export default function Header() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
             {cartCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-1">
+              <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[0.625rem] font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-1">
                 {cartCount > 9 ? '9+' : cartCount}
               </span>
             )}

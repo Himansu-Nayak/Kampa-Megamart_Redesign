@@ -34,7 +34,7 @@ export default function CompareDrawer() {
               <img src={p.image} className="w-12 h-12 rounded-lg object-cover bg-white" />
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-semibold truncate" style={{ fontFamily: 'Poppins, sans-serif' }}>{p.name}</p>
-                <p className="text-[10px] text-teal-400 font-bold">{formatPrice(p.price)}</p>
+                <p className="text-[0.625rem] text-teal-400 font-bold">{formatPrice(p.price)}</p>
               </div>
             </div>
           ))}
@@ -56,7 +56,7 @@ export default function CompareDrawer() {
           </button>
           <button
             onClick={() => compareList.forEach(id => toggleCompare(id))}
-            className="text-[10px] text-slate-400 hover:text-white uppercase font-bold tracking-wider"
+            className="text-[0.625rem] text-slate-400 hover:text-white uppercase font-bold tracking-wider"
           >
             Clear All
           </button>

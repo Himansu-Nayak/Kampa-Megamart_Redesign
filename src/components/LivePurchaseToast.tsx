@@ -78,14 +78,14 @@ export default function LivePurchaseToast() {
               <img src={toast.productImage} alt={toast.productName} className="w-full h-full object-cover" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[11px] text-teal-600 font-bold mb-0.5 flex items-center" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              <p className="text-[0.6875rem] text-teal-600 font-bold mb-0.5 flex items-center" style={{ fontFamily: 'Poppins, sans-serif' }}>
                 <span className="w-1.5 h-1.5 inline-block bg-teal-500 rounded-full mr-1.5 animate-pulse" />
                 Someone recently bought
               </p>
               <p className="text-xs font-semibold text-slate-800 truncate" style={{ fontFamily: 'Poppins, sans-serif' }}>
                 {toast.productName}
               </p>
-              <p className="text-[10px] text-slate-500 mt-0.5">
+              <p className="text-[0.625rem] text-slate-500 mt-0.5">
                 {toast.name} from {toast.city} • {toast.timeStr}
               </p>
             </div>

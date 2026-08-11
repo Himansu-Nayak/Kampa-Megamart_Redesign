@@ -91,7 +91,7 @@ export default function Home() {
               <div className={`absolute inset-0 bg-gradient-to-r ${s.bg} opacity-80`} />
               <div className="relative z-10 max-w-7xl mx-auto px-6 h-full flex items-center">
                 <div className="max-w-xl">
-                  <span className="inline-block bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full mb-6">
+                  <span className="inline-block bg-white/10 backdrop-blur-md border border-white/20 text-white text-[0.625rem] font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full mb-6">
                     {s.badge}
                   </span>
                   <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-3 leading-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
@@ -173,7 +173,7 @@ export default function Home() {
             <div key={t.label} className="flex flex-col items-center gap-1 min-w-[80px]">
               <span className="text-2xl mb-1">{t.icon}</span>
               <span className="text-sm font-extrabold text-slate-800" style={{ fontFamily: 'Poppins, sans-serif' }}>{t.text}</span>
-              <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">{t.label}</span>
+              <span className="text-[0.625rem] font-medium text-slate-500 uppercase tracking-wider">{t.label}</span>
             </div>
           ))}
         </div>
@@ -210,7 +210,7 @@ export default function Home() {
                 >
                   {cat.emoji}
                 </div>
-                <span className="text-[10px] md:text-xs font-semibold text-slate-700 text-center leading-tight">{cat.name}</span>
+                <span className="text-[0.625rem] md:text-xs font-semibold text-slate-700 text-center leading-tight">{cat.name}</span>
               </button>
             ))}
           </div>
@@ -250,7 +250,7 @@ export default function Home() {
                 >
                   <div className="relative h-36 bg-slate-50 overflow-hidden">
                     <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                    <div className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    <div className="absolute top-2 left-2 bg-red-500 text-white text-[0.625rem] font-bold px-2 py-0.5 rounded-full">
                       {disc}% OFF
                     </div>
                   </div>
@@ -258,7 +258,7 @@ export default function Home() {
                     <p className="text-xs font-semibold text-slate-800 line-clamp-2 leading-snug text-left" style={{ fontFamily: 'Poppins, sans-serif' }}>{product.name}</p>
                     <div className="flex items-baseline gap-1 mt-1.5">
                       <span className="text-sm font-bold text-slate-900" style={{ fontFamily: 'Poppins, sans-serif' }}>{formatPrice(product.price)}</span>
-                      <span className="text-[10px] text-slate-400 line-through">{formatPrice(product.mrp)}</span>
+                      <span className="text-[0.625rem] text-slate-400 line-through">{formatPrice(product.mrp)}</span>
                     </div>
                   </div>
                 </button>
@@ -353,7 +353,7 @@ export default function Home() {
             </div>
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
               <div className="md:w-1/3">
-                <span className="inline-block bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full mb-4">
+                <span className="inline-block bg-white/10 backdrop-blur-md border border-white/20 text-white text-[0.625rem] font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full mb-4">
                   PREMIUM COLLECTION
                 </span>
                 <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 leading-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
@@ -440,9 +440,9 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="text-xs font-semibold text-slate-800">{t.name}</p>
-                    <p className="text-[10px] text-slate-400">{t.city}</p>
+                    <p className="text-[0.625rem] text-slate-400">{t.city}</p>
                   </div>
-                  <span className="ml-auto text-[10px] text-teal-600 font-semibold bg-teal-50 px-1.5 py-0.5 rounded">✓ Verified</span>
+                  <span className="ml-auto text-[0.625rem] text-teal-600 font-semibold bg-teal-50 px-1.5 py-0.5 rounded">✓ Verified</span>
                 </div>
               </div>
             ))}

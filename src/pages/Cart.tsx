@@ -58,7 +58,7 @@ export default function Cart() {
                   <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
                 </button>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide">{product.brand}</p>
+                  <p className="text-[0.625rem] font-semibold text-slate-400 uppercase tracking-wide">{product.brand}</p>
                   <button
                     onClick={() => navigate('product', { productId: product.id })}
                     className="text-sm font-semibold text-slate-800 hover:text-teal-700 line-clamp-2 text-left mt-0.5"
@@ -168,9 +168,9 @@ export default function Cart() {
                 Proceed to Checkout →
               </button>
               <div className="flex flex-wrap items-center justify-center gap-2 mt-2">
-                <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Secured by</span>
+                <span className="text-[0.625rem] text-slate-400 font-semibold uppercase tracking-wider">Secured by</span>
                 {['UPI', 'Visa', 'MasterCard', 'RuPay', 'Norton'].map(p => (
-                  <span key={p} className="text-[9px] font-bold border border-slate-200 bg-slate-50 px-1.5 py-0.5 rounded text-slate-600 shadow-sm">{p}</span>
+                  <span key={p} className="text-[0.5625rem] font-bold border border-slate-200 bg-slate-50 px-1.5 py-0.5 rounded text-slate-600 shadow-sm">{p}</span>
                 ))}
               </div>
             </div>

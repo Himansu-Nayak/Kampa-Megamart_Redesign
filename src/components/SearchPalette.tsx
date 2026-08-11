@@ -48,7 +48,7 @@ export default function SearchPalette({ isOpen, onClose }: { isOpen: boolean; on
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="fixed top-12 md:top-24 left-1/2 -translate-x-1/2 w-[95%] md:w-[600px] bg-white rounded-2xl shadow-[0_20px_60px_rgb(0,0,0,0.2)] overflow-hidden z-[101] border border-white/50"
+            className="fixed inset-0 md:inset-auto md:top-24 md:left-1/2 md:-translate-x-1/2 w-full h-full md:h-auto md:w-[600px] bg-white rounded-none md:rounded-2xl shadow-none md:shadow-[0_20px_60px_rgb(0,0,0,0.2)] overflow-hidden z-[101] border-none md:border md:border-white/50 flex flex-col"
           >
             {/* Search Input Area */}
             <div className="flex items-center px-4 py-4 border-b border-slate-100 bg-slate-50/50">
@@ -70,7 +70,7 @@ export default function SearchPalette({ isOpen, onClose }: { isOpen: boolean; on
             </div>
 
             {/* Results Area */}
-            <div className="max-h-[60vh] overflow-y-auto p-2">
+            <div className="flex-1 overflow-y-auto p-2 md:max-h-[60vh]">
               {query.trim().length === 0 ? (
                 <div className="p-4">
                   <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
@@ -119,11 +119,11 @@ export default function SearchPalette({ isOpen, onClose }: { isOpen: boolean; on
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-bold text-slate-800 truncate" style={{ fontFamily: 'Poppins, sans-serif' }}>{p.name}</p>
-                          <p className="text-[10px] font-semibold text-teal-600 uppercase tracking-wider">{p.brand}</p>
+                          <p className="text-[0.625rem] font-semibold text-teal-600 uppercase tracking-wider">{p.brand}</p>
                         </div>
                         <div className="text-right">
                           <p className="text-sm font-extrabold text-slate-900">{formatPrice(p.price)}</p>
-                          {p.price < p.mrp && <p className="text-[10px] text-slate-400 line-through">{formatPrice(p.mrp)}</p>}
+                          {p.price < p.mrp && <p className="text-[0.625rem] text-slate-400 line-through">{formatPrice(p.mrp)}</p>}
                         </div>
                       </button>
                     ))

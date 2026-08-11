@@ -118,7 +118,7 @@ export default function ScratchCard({ onClose }: Props) {
               <span className="text-5xl mb-2">🪙</span>
               <span className="font-extrabold text-2xl text-amber-600" style={{ fontFamily: 'Poppins, sans-serif' }}>+500</span>
               <span className="font-bold text-slate-800 tracking-tight">KAMPA COINS</span>
-              <span className="text-[10px] text-slate-500 font-medium uppercase mt-2 bg-amber-100 px-2 py-1 rounded">Code: KAMMA10</span>
+              <span className="text-[0.625rem] text-slate-500 font-medium uppercase mt-2 bg-amber-100 px-2 py-1 rounded">Code: KAMMA10</span>
             </div>
 
             {/* The Scratchable Canvas Layer */}

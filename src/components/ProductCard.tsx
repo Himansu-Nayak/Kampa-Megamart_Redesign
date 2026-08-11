@@ -165,7 +165,7 @@ export default function ProductCard({ product, variant = 'grid' }: Props) {
             </div>
           )}
           {discount >= 20 && !product.badge && (
-            <div className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full transform-gpu" style={{ transform: "translateZ(30px)" }}>
+            <div className="absolute top-2 left-2 bg-red-500 text-white text-[0.625rem] font-bold px-2 py-0.5 rounded-full transform-gpu" style={{ transform: "translateZ(30px)" }}>
               {discount}% OFF
             </div>
           )}
@@ -195,20 +195,20 @@ export default function ProductCard({ product, variant = 'grid' }: Props) {
           )}
         </div>
         <div className="p-3 flex flex-col flex-1 transform-gpu" style={{ transform: "translateZ(20px)" }}>
-          <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">{product.brand}</p>
+          <p className="text-[0.625rem] text-slate-400 font-semibold uppercase tracking-wider">{product.brand}</p>
           <button onClick={() => navigate('product', { productId: product.id })} className="text-sm font-semibold text-slate-800 hover:text-teal-700 transition-colors line-clamp-2 text-left mt-0.5 flex-1" style={{ fontFamily: 'Poppins, sans-serif' }}>
             {product.name}
           </button>
           <div className="flex items-center gap-1.5 mt-1.5">
             <StarRating rating={product.rating} />
-            <span className="text-[10px] text-slate-400">({product.reviews.toLocaleString()})</span>
+            <span className="text-[0.625rem] text-slate-400">({product.reviews.toLocaleString()})</span>
           </div>
           <div className="flex items-center gap-1.5 mt-2">
             <span className="text-base font-bold text-slate-900" style={{ fontFamily: 'Poppins, sans-serif' }}>{formatPrice(product.price)}</span>
             {discount > 0 && <span className="text-xs text-slate-400 line-through">{formatPrice(product.mrp)}</span>}
           </div>
           {discount > 0 && (
-            <p className="text-[11px] text-green-600 font-semibold mt-0.5">Save {formatPrice(product.mrp - product.price)} ({discount}% off)</p>
+            <p className="text-[0.6875rem] text-green-600 font-semibold mt-0.5">Save {formatPrice(product.mrp - product.price)} ({discount}% off)</p>
           )}
           <button
             onClick={handleAddToCart}
@@ -238,7 +238,7 @@ function BadgePill({ badge }: { badge: string }) {
     soldout: 'SOLD OUT',
   }
   return (
-    <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${map[badge] ?? 'bg-slate-500 text-white'}`}>
+    <span className={`text-[0.5625rem] font-bold px-2 py-0.5 rounded-full ${map[badge] ?? 'bg-slate-500 text-white'}`}>
       {label[badge] ?? badge.toUpperCase()}
     </span>
   )

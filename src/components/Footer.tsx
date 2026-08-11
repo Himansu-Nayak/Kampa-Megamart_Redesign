@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className="bg-slate-900 text-slate-300 mt-16">
       {/* Trust strip */}
       <div className="border-b border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {[
             { icon: '🚚', title: 'Free Delivery', desc: 'On orders above ₹499' },
             { icon: '🔒', title: 'Secure Payments', desc: 'UPI, Cards, Net Banking' },
@@ -26,14 +26,14 @@ export default function Footer() {
       </div>
 
       {/* Links grid */}
-      <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-2 md:grid-cols-5 gap-8">
+      <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8">
         {/* Brand col */}
         <div className="col-span-2 md:col-span-1">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-9 h-9 bg-teal-600 rounded-xl flex items-center justify-center text-white font-extrabold text-xl" style={{ fontFamily: 'Poppins, sans-serif' }}>K</div>
             <div>
               <div className="text-white font-bold text-base leading-none" style={{ fontFamily: 'Poppins, sans-serif' }}>Kampa</div>
-              <div className="text-slate-500 text-[9px] font-semibold uppercase tracking-widest">Megamart</div>
+              <div className="text-slate-500 text-[0.5625rem] font-semibold uppercase tracking-widest">Megamart</div>
             </div>
           </div>
           <p className="text-slate-400 text-xs leading-relaxed mb-4">India's trusted hypermarket for home care, electronics, health, fashion, and more. Delivered to your doorstep.</p>
@@ -137,7 +137,7 @@ export default function Footer() {
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <span className="text-slate-500 text-xs mr-1">We accept:</span>
             {['UPI', 'Visa', 'Mastercard', 'RuPay', 'Net Banking', 'EMI'].map(p => (
-              <span key={p} className="bg-slate-800 border border-slate-700 text-slate-400 text-[10px] font-medium px-2 py-0.5 rounded">{p}</span>
+              <span key={p} className="bg-slate-800 border border-slate-700 text-slate-400 text-[0.625rem] font-medium px-2 py-0.5 rounded">{p}</span>
             ))}
           </div>
         </div>

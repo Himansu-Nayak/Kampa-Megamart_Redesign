@@ -30,12 +30,12 @@ export default function BottomNav() {
               } ${item.id === 'cart' ? 'bottom-cart-icon' : ''}`}
             >
               <Icon size={24} strokeWidth={isActive ? 2.5 : 2} className={isActive ? 'transform scale-110 transition-transform' : ''} />
-              <span className={`text-[10px] font-medium mt-1 ${isActive ? 'font-bold' : ''}`}>
+              <span className={`text-[0.625rem] font-medium mt-1 ${isActive ? 'font-bold' : ''}`}>
                 {item.label}
               </span>
               
               {item.id === 'cart' && cartCount > 0 && (
-                <span className="absolute top-0 right-3 bg-red-500 text-white text-[10px] font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-1 border border-white">
+                <span className="absolute top-0 right-3 bg-red-500 text-white text-[0.625rem] font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-1 border border-white">
                   {cartCount > 9 ? '9+' : cartCount}
                 </span>
               )}

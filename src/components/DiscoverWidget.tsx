@@ -45,7 +45,7 @@ export default function DiscoverWidget() {
         initial={{ opacity: 0, y: 50, scale: 0.9 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 50, scale: 0.9 }}
-        className="fixed bottom-6 left-6 w-[320px] h-[550px] z-[90] bg-black rounded-[2rem] overflow-hidden shadow-2xl border-4 border-slate-900"
+        className="fixed inset-0 w-full h-full md:inset-auto md:bottom-6 md:left-6 md:w-[320px] md:h-[550px] z-[90] bg-black md:rounded-[2rem] overflow-hidden shadow-2xl border-none md:border-4 border-slate-900 flex flex-col"
       >
         <button 
           onClick={toggleDiscover}
@@ -66,7 +66,7 @@ export default function DiscoverWidget() {
           className="h-full w-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide relative"
         >
           {discoverProducts.map((p, index) => (
-            <div key={p.id} className="h-[550px] w-full snap-start snap-always relative flex items-center justify-center overflow-hidden bg-black">
+            <div key={p.id} className="h-full md:h-[550px] w-full snap-start snap-always relative flex items-center justify-center overflow-hidden bg-black flex-shrink-0">
               
               <motion.div 
                 className="absolute inset-0 z-0"
@@ -95,21 +95,21 @@ export default function DiscoverWidget() {
                   <div className="w-9 h-9 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white group-hover:bg-teal-600 transition-colors">
                     <Heart className="w-5 h-5" fill={wishlist.includes(p.id) ? "currentColor" : "none"} color={wishlist.includes(p.id) ? "#ef4444" : "white"} />
                   </div>
-                  <span className="text-white text-[10px] font-semibold drop-shadow-md">{(p.reviews * 1.5).toLocaleString()}</span>
+                  <span className="text-white text-[0.625rem] font-semibold drop-shadow-md">{(p.reviews * 1.5).toLocaleString()}</span>
                 </button>
                 
                 <button className="flex flex-col items-center gap-1 group">
                   <div className="w-9 h-9 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white group-hover:bg-slate-700 transition-colors">
                     <MessageCircle className="w-5 h-5" />
                   </div>
-                  <span className="text-white text-[10px] font-semibold drop-shadow-md">{Math.floor(p.reviews / 10).toLocaleString()}</span>
+                  <span className="text-white text-[0.625rem] font-semibold drop-shadow-md">{Math.floor(p.reviews / 10).toLocaleString()}</span>
                 </button>
 
                 <button className="flex flex-col items-center gap-1 group">
                   <div className="w-9 h-9 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white group-hover:bg-blue-600 transition-colors">
                     <Share2 className="w-5 h-5" />
                   </div>
-                  <span className="text-white text-[10px] font-semibold drop-shadow-md">Share</span>
+                  <span className="text-white text-[0.625rem] font-semibold drop-shadow-md">Share</span>
                 </button>
                 
                 <div className="w-10 h-10 mt-2 rounded-full border-2 border-white/50 overflow-hidden animate-[spin_4s_linear_infinite]">
@@ -139,8 +139,8 @@ export default function DiscoverWidget() {
                 <div className="pointer-events-auto bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/20 p-1.5 rounded-xl flex items-center gap-2 transition-colors cursor-pointer group shadow-2xl" onClick={() => navigate('product', { productId: p.id })}>
                   <img src={p.image} className="w-10 h-10 object-cover rounded-lg shadow-md border border-white/10" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-white font-bold text-[11px] truncate drop-shadow-sm">{p.name}</p>
-                    <p className="text-teal-400 font-extrabold text-[11px] drop-shadow-sm">{formatPrice(p.price)}</p>
+                    <p className="text-white font-bold text-[0.6875rem] truncate drop-shadow-sm">{p.name}</p>
+                    <p className="text-teal-400 font-extrabold text-[0.6875rem] drop-shadow-sm">{formatPrice(p.price)}</p>
                   </div>
                   <button 
                     onClick={(e) => {

@@ -327,7 +327,7 @@ export default function Checkout() {
                 <span className="font-bold text-slate-800">Total</span>
                 <span className="text-2xl font-extrabold text-slate-900 leading-none" style={{ fontFamily: 'Poppins, sans-serif' }}>{formatPrice(total)}</span>
               </div>
-              <p className="text-[10px] text-green-600 font-semibold text-right">You will earn {coinsEarned} coins!</p>
+              <p className="text-[0.625rem] text-green-600 font-semibold text-right">You will earn {coinsEarned} coins!</p>
             </div>
 
             <button
@@ -347,7 +347,7 @@ export default function Checkout() {
               )}
             </button>
             <div className="flex flex-col items-center justify-center gap-2">
-              <div className="flex items-center gap-1.5 text-[10px] font-bold text-green-700 bg-green-50 px-2 py-1 rounded">
+              <div className="flex items-center gap-1.5 text-[0.625rem] font-bold text-green-700 bg-green-50 px-2 py-1 rounded">
                 <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
                 256-Bit Encrypted Secure Checkout
               </div>

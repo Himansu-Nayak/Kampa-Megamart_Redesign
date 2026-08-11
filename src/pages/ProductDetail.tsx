@@ -95,7 +95,7 @@ export default function ProductDetail() {
           <div className="flex items-center gap-2 mb-2 flex-wrap">
             <span className="text-xs font-bold text-teal-700 uppercase tracking-wide bg-teal-50 px-2 py-0.5 rounded">{product.brand}</span>
             {product.badge && (
-              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
+              <span className={`text-[0.625rem] font-bold px-2 py-0.5 rounded-full uppercase ${
                 product.badge === 'sale' ? 'bg-red-100 text-red-600' :
                 product.badge === 'new' ? 'bg-blue-100 text-blue-600' :
                 product.badge === 'bestseller' ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-600'
@@ -104,9 +104,9 @@ export default function ProductDetail() {
               </span>
             )}
             {product.inStock ? (
-              <span className="text-[10px] font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">✓ In Stock</span>
+              <span className="text-[0.625rem] font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">✓ In Stock</span>
             ) : (
-              <span className="text-[10px] font-semibold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">Out of Stock</span>
+              <span className="text-[0.625rem] font-semibold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">Out of Stock</span>
             )}
           </div>
 
@@ -141,14 +141,14 @@ export default function ProductDetail() {
           {/* Quantity */}
           <div className="flex items-center gap-4 mb-5">
             <span className="text-sm font-medium text-slate-700">Quantity:</span>
-            <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden">
-              <button onClick={() => setQty(q => Math.max(1, q - 1))} className="px-3 py-2 hover:bg-slate-100 transition-colors text-slate-700">
+            <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden min-h-[44px]">
+              <button onClick={() => setQty(q => Math.max(1, q - 1))} className="px-3 min-h-[44px] hover:bg-slate-100 transition-colors text-slate-700">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
                 </svg>
               </button>
-              <span className="px-4 py-2 text-sm font-semibold text-slate-900 min-w-[2.5rem] text-center border-x border-slate-200">{qty}</span>
-              <button onClick={() => setQty(q => q + 1)} className="px-3 py-2 hover:bg-slate-100 transition-colors text-slate-700">
+              <span className="px-4 text-sm font-semibold text-slate-900 min-w-[2.5rem] text-center border-x border-slate-200 flex items-center justify-center min-h-[44px]">{qty}</span>
+              <button onClick={() => setQty(q => q + 1)} className="px-3 min-h-[44px] hover:bg-slate-100 transition-colors text-slate-700">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
@@ -157,7 +157,7 @@ export default function ProductDetail() {
           </div>
 
           {/* CTAs */}
-          <div className="flex gap-3 mb-4" ref={ctaRef}>
+          <div className="flex flex-col sm:flex-row gap-3 mb-4" ref={ctaRef}>
             <button
               onClick={handleAddToCart}
               disabled={!product.inStock}
@@ -181,11 +181,11 @@ export default function ProductDetail() {
 
           {/* Guaranteed Safe Checkout */}
           <div className="mb-6 p-3 bg-slate-50 border border-slate-100 rounded-xl flex flex-col items-center">
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1">
+            <p className="text-[0.625rem] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1">
               <svg className="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
               Guaranteed Safe Checkout
             </p>
-            <div className="flex flex-wrap justify-center gap-2 items-center text-[10px] font-bold text-slate-400">
+            <div className="flex flex-wrap justify-center gap-2 items-center text-[0.625rem] font-bold text-slate-400">
               <span className="border border-slate-200 bg-white px-2 py-1 rounded shadow-sm">VISA</span>
               <span className="border border-slate-200 bg-white px-2 py-1 rounded shadow-sm">MasterCard</span>
               <span className="border border-slate-200 bg-white px-2 py-1 rounded shadow-sm">UPI</span>
@@ -205,7 +205,7 @@ export default function ProductDetail() {
                   <span className="text-xs font-bold text-red-500 flex items-center gap-1">🔥 Ends in 02:15:30</span>
                 </div>
                 <h4 className="font-extrabold text-slate-800 text-sm" style={{ fontFamily: 'Poppins, sans-serif' }}>Team up & Save 30%</h4>
-                <p className="text-[11px] text-slate-500 mt-0.5">Share with 2 friends to unlock wholesale pricing.</p>
+                <p className="text-[0.6875rem] text-slate-500 mt-0.5">Share with 2 friends to unlock wholesale pricing.</p>
               </div>
               <div className="flex flex-col w-full xl:w-auto flex-shrink-0">
                 <button
@@ -338,7 +338,7 @@ export default function ProductDetail() {
                           {r.name[0]}
                         </div>
                         <span className="font-semibold text-sm text-slate-800">{r.name}</span>
-                        <span className="text-[10px] text-teal-600 bg-teal-50 px-1.5 py-0.5 rounded font-semibold">✓ Verified Purchase</span>
+                        <span className="text-[0.625rem] text-teal-600 bg-teal-50 px-1.5 py-0.5 rounded font-semibold">✓ Verified Purchase</span>
                       </div>
                       <span className="text-xs text-slate-400">{r.date}</span>
                     </div>
